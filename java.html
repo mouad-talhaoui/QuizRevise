@@ -76,75 +76,530 @@
     </div>
 
     <script>
+        localStorage.clear();
         // Quiz questions data
         const quizQuestions = [
-            {
-                id: 1,
-                type: "vrai-faux",
-                question: "Java est un langage de programmation compilé et interprété.",
-                correctAnswer: "vrai",
-                explanation: "Java est d'abord compilé en bytecode, puis ce bytecode est interprété par la JVM (Java Virtual Machine)."
-            },
-            {
-                id: 2,
-                type: "multichoix",
-                question: "Quel mot-clé est utilisé pour hériter d'une classe en Java?",
-                options: [
-                    "implements",
-                    "inherits",
-                    "extends",
-                    "super"
-                ],
-                correctAnswer: 2,
-                explanation: "Le mot-clé 'extends' est utilisé pour hériter d'une classe en Java. Exemple: class Enfant extends Parent"
-            },
-            {
-                id: 3,
-                type: "vrai-faux",
-                question: "En Java, les tableaux peuvent redimensionnés dynamiquement.",
-                correctAnswer: "faux",
-                explanation: "Les tableaux en Java ont une taille fixe. Pour une structure de données redimensionnable, on utilise ArrayList."
-            },
-            {
-                id: 4,
-                type: "multichoix",
-                question: "Quelle méthode est le point d'entrée d'un programme Java?",
-                options: [
-                    "start()",
-                    "main()",
-                    "init()",
-                    "run()"
-                ],
-                correctAnswer: 1,
-                explanation: "La méthode main() est le point d'entrée d'un programme Java. Signature: public static void main(String[] args)"
-            },
-            {
-                id: 5,
-                type: "multichoix",
-                question: "Quel modificateur permet d'accéder à un membre depuis n'importe quelle classe?",
-                options: [
-                    "private",
-                    "protected",
-                    "public",
-                    "default (pas de modificateur)"
-                ],
-                correctAnswer: 2,
-                explanation: "Le modificateur 'public' permet d'accéder au membre depuis n'importe quelle classe, quel que soit le package."
-            },
-            {
-                id: 6,
-                type: "multichoix",
-                question: "Quel modificateur permet d'accéder à un membre depuis n'importe quelle classe?",
-                options: [
-                    "private",
-                    "protected",
-                    "public",
-                    "default (pas de modificateur)"
-                ],
-                correctAnswer: 2,
-                explanation: "Le modificateur 'public' permet d'accéder au membre depuis n'importe quelle classe, quel que soit le package."
-            }
-        ];
+    {
+        "id": 1,
+        "type": "multichoix",
+        "question": "Quel mot-clé est utilisé pour hériter d'une classe en Java?",
+        "options": [
+            "implements",
+            "extends",
+            "inherits",
+            "super"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Le mot-clé 'extends' est utilisé pour l'héritage de classes en Java."
+    },
+    {
+        "id": 2,
+        "type": "multichoix",
+        "question": "Quelle méthode est le point d'entrée d'un programme Java?",
+        "options": [
+            "start()",
+            "main()",
+            "run()",
+            "execute()"
+        ],
+        "correctAnswer": 1,
+        "explanation": "La méthode main() est le point d'entrée standard d'une application Java."
+    },
+    {
+        "id": 3,
+        "type": "multichoix",
+        "question": "Quel type de données est utilisé pour stocker des caractères en Java?",
+        "options": [
+            "String",
+            "char",
+            "Character",
+            "char[]"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Le type primitif 'char' est utilisé pour stocker un seul caractère."
+    },
+    {
+        "id": 4,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on une constante en Java?",
+        "options": [
+            "const int MAX = 100;",
+            "final int MAX = 100;",
+            "static int MAX = 100;",
+            "constant int MAX = 100;"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Le mot-clé 'final' est utilisé pour déclarer des constantes en Java."
+    },
+    {
+        "id": 5,
+        "type": "multichoix",
+        "question": "Quelle interface doit implémenter une classe pour être triée avec Collections.sort()?",
+        "options": [
+            "Serializable",
+            "Cloneable",
+            "Comparable",
+            "Runnable"
+        ],
+        "correctAnswer": 2,
+        "explanation": "L'interface Comparable permet de définir l'ordre naturel d'une classe pour le tri."
+    },
+    {
+        "id": 6,
+        "type": "multichoix",
+        "question": "Quel modificateur permet d'accéder à un membre depuis n'importe quelle classe?",
+        "options": [
+            "private",
+            "protected",
+            "public",
+            "default (pas de modificateur)"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Le modificateur 'public' permet d'accéder au membre depuis n'importe quelle classe, quel que soit le package."
+    },
+    {
+        "id": 7,
+        "type": "multichoix",
+        "question": "Quelle méthode est appelée lors de la création d'un objet?",
+        "options": [
+            "main()",
+            "constructor()",
+            "new()",
+            "create()"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Le constructeur est appelé automatiquement lors de l'instanciation d'un objet avec 'new'."
+    },
+    {
+        "id": 8,
+        "type": "multichoix",
+        "question": "Quel mot-clé est utilisé pour référer à l'instance courante d'une classe?",
+        "options": [
+            "this",
+            "super",
+            "self",
+            "current"
+        ],
+        "correctAnswer": 0,
+        "explanation": "'this' référence l'instance courante de la classe."
+    },
+    {
+        "id": 9,
+        "type": "multichoix",
+        "question": "Quelle collection n'autorise pas les doublons en Java?",
+        "options": [
+            "ArrayList",
+            "LinkedList",
+            "HashSet",
+            "HashMap"
+        ],
+        "correctAnswer": 2,
+        "explanation": "HashSet implémente l'interface Set et n'autorise pas les éléments dupliqués."
+    },
+    {
+        "id": 10,
+        "type": "multichoix",
+        "question": "Comment gère-t-on les exceptions en Java?",
+        "options": [
+            "try-catch",
+            "error-handling",
+            "exception-handle",
+            "catch-throw"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Le bloc try-catch est utilisé pour capturer et gérer les exceptions."
+    },
+    {
+        "id": 11,
+        "type": "multichoix",
+        "question": "Quel mot-clé est utilisé pour lancer une exception?",
+        "options": [
+            "throw",
+            "throws",
+            "exception",
+            "catch"
+        ],
+        "correctAnswer": 0,
+        "explanation": "'throw' est utilisé pour lancer explicitement une exception."
+    },
+    {
+        "id": 12,
+        "type": "multichoix",
+        "question": "Quelle méthode doit être implémentée pour l'interface Runnable?",
+        "options": [
+            "start()",
+            "run()",
+            "execute()",
+            "main()"
+        ],
+        "correctAnswer": 1,
+        "explanation": "L'interface Runnable requiert l'implémentation de la méthode run()."
+    },
+    {
+        "id": 13,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on un tableau en Java?",
+        "options": [
+            "int[] arr;",
+            "int arr[];",
+            "array int arr;",
+            "Les deux premières réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "Les deux syntaxes int[] arr et int arr[] sont valides en Java."
+    },
+    {
+        "id": 14,
+        "type": "multichoix",
+        "question": "Quel mot-clé empêche l'héritage d'une classe?",
+        "options": [
+            "private",
+            "final",
+            "static",
+            "sealed"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Une classe déclarée 'final' ne peut pas être héritée."
+    },
+    {
+        "id": 15,
+        "type": "multichoix",
+        "question": "Quelle méthode permet de comparer deux chaînes en Java?",
+        "options": [
+            "equals()",
+            "==",
+            "compare()",
+            "match()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "La méthode equals() compare le contenu des chaînes, alors que '==' compare les références."
+    },
+    {
+        "id": 16,
+        "type": "multichoix",
+        "question": "Quel est le parent de toutes les classes en Java?",
+        "options": [
+            "Object",
+            "Class",
+            "Main",
+            "Root"
+        ],
+        "correctAnswer": 0,
+        "explanation": "La classe Object est la racine de la hiérarchie des classes en Java."
+    },
+    {
+        "id": 17,
+        "type": "multichoix",
+        "question": "Comment crée-t-on un thread en Java?",
+        "options": [
+            "En étendant la classe Thread",
+            "En implémentant l'interface Runnable",
+            "Les deux méthodes",
+            "Avec ExecutorService seulement"
+        ],
+        "correctAnswer": 2,
+        "explanation": "On peut créer un thread en étendant Thread ou en implémentant Runnable."
+    },
+    {
+        "id": 18,
+        "type": "multichoix",
+        "question": "Quel modificateur permet l'accès uniquement dans le même package?",
+        "options": [
+            "private",
+            "protected",
+            "public",
+            "default (package-private)"
+        ],
+        "correctAnswer": 3,
+        "explanation": "Le modificateur par défaut (pas de mot-clé) permet l'accès uniquement dans le même package."
+    },
+    {
+        "id": 19,
+        "type": "multichoix",
+        "question": "Quelle collection maintient l'ordre d'insertion?",
+        "options": [
+            "HashSet",
+            "TreeSet",
+            "LinkedHashSet",
+            "HashMap"
+        ],
+        "correctAnswer": 2,
+        "explanation": "LinkedHashSet maintient l'ordre d'insertion des éléments."
+    },
+    {
+        "id": 20,
+        "type": "multichoix",
+        "question": "Quel mot-clé est utilisé pour les méthodes qui peuvent être redéfinies?",
+        "options": [
+            "static",
+            "final",
+            "abstract",
+            "private"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Les méthodes abstract doivent être redéfinies dans les classes filles."
+    },
+    {
+        "id": 21,
+        "type": "multichoix",
+        "question": "Comment convertit-on un String en int?",
+        "options": [
+            "Integer.parse(str)",
+            "Integer.parseInt(str)",
+            "String.toInt(str)",
+            "Int.parse(str)"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Integer.parseInt() convertit une String en int."
+    },
+    {
+        "id": 22,
+        "type": "multichoix",
+        "question": "Quelle annotation indique qu'une méthode redéfinit une méthode parent?",
+        "options": [
+            "@Override",
+            "@Deprecated",
+            "@SuppressWarnings",
+            "@Inherit"
+        ],
+        "correctAnswer": 0,
+        "explanation": "@Override indique que la méthode redéfinit une méthode de la classe parente."
+    },
+    {
+        "id": 23,
+        "type": "multichoix",
+        "question": "Quel mot-clé permet d'accéder aux membres de la classe parente?",
+        "options": [
+            "this",
+            "super",
+            "parent",
+            "base"
+        ],
+        "correctAnswer": 1,
+        "explanation": "'super' permet d'accéder aux membres de la classe parente."
+    },
+    {
+        "id": 24,
+        "type": "multichoix",
+        "question": "Quelle interface représente une collection d'éléments uniques?",
+        "options": [
+            "List",
+            "Set",
+            "Map",
+            "Collection"
+        ],
+        "correctAnswer": 1,
+        "explanation": "L'interface Set représente une collection d'éléments uniques."
+    },
+    {
+        "id": 25,
+        "type": "multichoix",
+        "question": "Comment itère-t-on sur une Map en Java?",
+        "options": [
+            "Avec une boucle for",
+            "Avec entrySet() et une boucle for-each",
+            "Avec keySet()",
+            "Toutes ces réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "On peut itérer sur une Map de plusieurs manières : entrySet(), keySet(), ou values()."
+    },
+    {
+        "id": 26,
+        "type": "multichoix",
+        "question": "Quel mot-clé est utilisé pour les blocs de code synchronisés?",
+        "options": [
+            "lock",
+            "synchronized",
+            "volatile",
+            "atomic"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Le mot-clé synchronized permet de synchroniser l'accès à un bloc de code."
+    },
+    {
+        "id": 27,
+        "type": "multichoix",
+        "question": "Quelle méthode est appelée avant la destruction d'un objet?",
+        "options": [
+            "destroy()",
+            "finalize()",
+            "delete()",
+            "cleanup()"
+        ],
+        "correctAnswer": 1,
+        "explanation": "La méthode finalize() est appelée par le garbage collector avant de détruire l'objet."
+    },
+    {
+        "id": 28,
+        "type": "multichoix",
+        "question": "Quel type de variable est partagé entre toutes les instances?",
+        "options": [
+            "instance variable",
+            "local variable",
+            "static variable",
+            "final variable"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Les variables static sont partagées entre toutes les instances de la classe."
+    },
+    {
+        "id": 29,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on une méthode de classe?",
+        "options": [
+            "Avec le mot-clé class",
+            "Avec le mot-clé static",
+            "Avec le mot-clé final",
+            "Avec le mot-clé abstract"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Le mot-clé static déclare une méthode de classe (méthode statique)."
+    },
+    {
+        "id": 30,
+        "type": "multichoix",
+        "question": "Quelle collection est thread-safe par défaut?",
+        "options": [
+            "ArrayList",
+            "HashMap",
+            "Vector",
+            "LinkedList"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Vector est thread-safe alors que ArrayList ne l'est pas."
+    },
+    {
+        "id": 31,
+        "type": "multichoix",
+        "question": "Quel mot-clé permet de sortir d'une boucle?",
+        "options": [
+            "exit",
+            "break",
+            "continue",
+            "return"
+        ],
+        "correctAnswer": 1,
+        "explanation": "break permet de sortir d'une boucle, continue passe à l'itération suivante."
+    },
+    {
+        "id": 32,
+        "type": "multichoix",
+        "question": "Quelle méthode clone un objet en Java?",
+        "options": [
+            "copy()",
+            "clone()",
+            "duplicate()",
+            "replicate()"
+        ],
+        "correctAnswer": 1,
+        "explanation": "La méthode clone() de la classe Object permet de cloner un objet."
+    },
+    {
+        "id": 33,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on une interface en Java?",
+        "options": [
+            "class InterfaceName",
+            "interface InterfaceName",
+            "abstract interface InterfaceName",
+            "@interface InterfaceName"
+        ],
+        "correctAnswer": 1,
+        "explanation": "On utilise le mot-clé 'interface' pour déclarer une interface."
+    },
+    {
+        "id": 34,
+        "type": "multichoix",
+        "question": "Quel est le type de retour d'une méthode constructeur?",
+        "options": [
+            "void",
+            "Object",
+            "Aucun type de retour",
+            "La classe elle-même"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Un constructeur n'a pas de type de retour explicite."
+    },
+    {
+        "id": 35,
+        "type": "multichoix",
+        "question": "Quelle méthode permet de convertir un objet en String?",
+        "options": [
+            "toString()",
+            "toText()",
+            "stringify()",
+            "convert()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "La méthode toString() permet de convertir un objet en représentation String."
+    },
+    {
+        "id": 36,
+        "type": "multichoix",
+        "question": "Comment gère-t-on les ressources avec try en Java 7+?",
+        "options": [
+            "try-with-resources",
+            "try-catch-finally",
+            "try-using",
+            "try-resource"
+        ],
+        "correctAnswer": 0,
+        "explanation": "try-with-resources permet de gérer automatiquement la fermeture des ressources."
+    },
+    {
+        "id": 37,
+        "type": "multichoix",
+        "question": "Quel package contient les classes de collections?",
+        "options": [
+            "java.util",
+            "java.collections",
+            "java.lang",
+            "java.io"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Le package java.util contient les interfaces et classes de collections."
+    },
+    {
+        "id": 38,
+        "type": "multichoix",
+        "question": "Quelle méthode permet de trier une List?",
+        "options": [
+            "List.sort()",
+            "Collections.sort()",
+            "Arrays.sort()",
+            "Les deux premières réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "On peut utiliser Collections.sort() ou List.sort() (depuis Java 8)."
+    },
+    {
+        "id": 39,
+        "type": "multichoix",
+        "question": "Comment crée-t-on une classe immuable?",
+        "options": [
+            "Avec le mot-clé final",
+            "En rendant tous les champs privés et finals",
+            "En ne fournissant pas de setters",
+            "Toutes ces réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "Une classe immuable a des champs finaux, pas de setters, et est déclarée final."
+    },
+    {
+        "id": 40,
+        "type": "multichoix",
+        "question": "Quel opérateur est utilisé pour l'instanceof?",
+        "options": [
+            "instanceof",
+            "typeof",
+            "isInstance",
+            "getClass"
+        ],
+        "correctAnswer": 0,
+        "explanation": "L'opérateur instanceof vérifie si un objet est une instance d'une classe donnée."
+    }
+];
 
                 document.getElementById("progress-text").textContent = "Question 1/"+quizQuestions.length;
 
