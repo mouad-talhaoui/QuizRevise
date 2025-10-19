@@ -114,8 +114,787 @@
       localStorage.clear();
       // Quiz questions data
       const quizQuestions = [
-        
-      ];
+    {
+        "id": 1,
+        "type": "multichoix",
+        "question": "Quel est le type de retour de la fonction main() en C?",
+        "options": [
+            "void",
+            "int",
+            "char",
+            "float"
+        ],
+        "correctAnswer": 1,
+        "explanation": "La fonction main() retourne généralement un int (0 pour succès, autre valeur pour erreur)."
+    },
+    {
+        "id": 2,
+        "type": "multichoix",
+        "question": "Quel opérateur est utilisé pour obtenir l'adresse d'une variable?",
+        "options": [
+            "*",
+            "&",
+            "->",
+            "."
+        ],
+        "correctAnswer": 1,
+        "explanation": "L'opérateur & donne l'adresse mémoire d'une variable."
+    },
+    {
+        "id": 3,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on un pointeur vers un entier?",
+        "options": [
+            "int ptr;",
+            "int *ptr;",
+            "pointer int ptr;",
+            "int &ptr;"
+        ],
+        "correctAnswer": 1,
+        "explanation": "int *ptr; déclare un pointeur vers un entier."
+    },
+    {
+        "id": 4,
+        "type": "multichoix",
+        "question": "Quelle fonction permet d'allouer de la mémoire dynamiquement?",
+        "options": [
+            "malloc()",
+            "alloc()",
+            "new()",
+            "create()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "malloc() alloue de la mémoire dans le tas (heap)."
+    },
+    {
+        "id": 5,
+        "type": "multichoix",
+        "question": "Comment libère-t-on la mémoire allouée avec malloc()?",
+        "options": [
+            "free()",
+            "release()",
+            "delete",
+            "dealloc()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "free() libère la mémoire précédemment allouée avec malloc(), calloc() ou realloc()."
+    },
+    {
+        "id": 6,
+        "type": "multichoix",
+        "question": "Quel opérateur permet d'accéder à la valeur pointée par un pointeur?",
+        "options": [
+            "&",
+            "*",
+            "->",
+            "."
+        ],
+        "correctAnswer": 1,
+        "explanation": "L'opérateur * (déréférencement) donne accès à la valeur pointée par un pointeur."
+    },
+    {
+        "id": 7,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on un tableau de 10 entiers?",
+        "options": [
+            "int array[10];",
+            "array int[10];",
+            "int array = [10];",
+            "int[10] array;"
+        ],
+        "correctAnswer": 0,
+        "explanation": "int array[10]; déclare un tableau de 10 entiers."
+    },
+    {
+        "id": 8,
+        "type": "multichoix",
+        "question": "Quelle est la valeur d'index du premier élément d'un tableau?",
+        "options": [
+            "0",
+            "1",
+            "-1",
+            "first"
+        ],
+        "correctAnswer": 0,
+        "explanation": "En C, les indices de tableau commencent à 0."
+    },
+    {
+        "id": 9,
+        "type": "multichoix",
+        "question": "Quelle fonction permet d'afficher du texte à l'écran?",
+        "options": [
+            "printf()",
+            "print()",
+            "echo()",
+            "display()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "printf() est la fonction standard pour afficher du texte formaté."
+    },
+    {
+        "id": 10,
+        "type": "multichoix",
+        "question": "Quel en-tête faut-il inclure pour utiliser printf()?",
+        "options": [
+            "<stdio.h>",
+            "<stdlib.h>",
+            "<math.h>",
+            "<string.h>"
+        ],
+        "correctAnswer": 0,
+        "explanation": "stdio.h contient les déclarations des fonctions d'entrée/sortie standard."
+    },
+    {
+        "id": 11,
+        "type": "multichoix",
+        "question": "Comment représente-t-on la fin d'une chaîne de caractères?",
+        "options": [
+            "'\\0'",
+            "'\\n'",
+            "'end'",
+            "'stop'"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Le caractère nul '\\0' marque la fin d'une chaîne en C."
+    },
+    {
+        "id": 12,
+        "type": "multichoix",
+        "question": "Quelle fonction permet de copier une chaîne?",
+        "options": [
+            "strcpy()",
+            "strcopy()",
+            "copy()",
+            "stringcpy()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "strcpy() copie une chaîne source vers une chaîne destination."
+    },
+    {
+        "id": 13,
+        "type": "multichoix",
+        "question": "Comment compare-t-on deux chaînes?",
+        "options": [
+            "strcmp()",
+            "strcompare()",
+            "compare()",
+            "stringcmp()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "strcmp() compare deux chaînes et retourne 0 si elles sont égales."
+    },
+    {
+        "id": 14,
+        "type": "multichoix",
+        "question": "Quelle fonction donne la longueur d'une chaîne?",
+        "options": [
+            "strlen()",
+            "strlength()",
+            "length()",
+            "size()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "strlen() retourne le nombre de caractères avant le '\\0'."
+    },
+    {
+        "id": 15,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on une structure?",
+        "options": [
+            "struct Nom { ... };",
+            "structure Nom { ... };",
+            "class Nom { ... };",
+            "type struct Nom { ... };"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Le mot-clé struct est utilisé pour définir une structure."
+    },
+    {
+        "id": 16,
+        "type": "multichoix",
+        "question": "Quel opérateur permet d'accéder aux membres d'une structure?",
+        "options": [
+            ".",
+            "->",
+            "*",
+            "&"
+        ],
+        "correctAnswer": 0,
+        "explanation": "L'opérateur . est utilisé pour accéder aux membres d'une variable structure."
+    },
+    {
+        "id": 17,
+        "type": "multichoix",
+        "question": "Quel opérateur permet d'accéder aux membres d'une structure via un pointeur?",
+        "options": [
+            ".",
+            "->",
+            "*",
+            "&"
+        ],
+        "correctAnswer": 1,
+        "explanation": "L'opérateur -> est utilisé pour accéder aux membres d'une structure via un pointeur."
+    },
+    {
+        "id": 18,
+        "type": "multichoix",
+        "question": "Quel type de variable ne peut pas être modifié?",
+        "options": [
+            "const",
+            "static",
+            "volatile",
+            "extern"
+        ],
+        "correctAnswer": 0,
+        "explanation": "const indique que la variable est constante et ne peut être modifiée."
+    },
+    {
+        "id": 19,
+        "type": "multichoix",
+        "question": "Quel mot-clé permet de créer un type énuméré?",
+        "options": [
+            "enum",
+            "typedef",
+            "struct",
+            "union"
+        ],
+        "correctAnswer": 0,
+        "explanation": "enum permet de définir un type énuméré avec des constantes nommées."
+    },
+    {
+        "id": 20,
+        "type": "multichoix",
+        "question": "Comment crée-t-on un alias de type?",
+        "options": [
+            "typedef",
+            "alias",
+            "define",
+            "type"
+        ],
+        "correctAnswer": 0,
+        "explanation": "typedef permet de créer un alias pour un type existant."
+    },
+    {
+        "id": 21,
+        "type": "multichoix",
+        "question": "Quelle directive du préprocesseur permet d'inclure un fichier?",
+        "options": [
+            "#include",
+            "#define",
+            "#ifdef",
+            "#pragma"
+        ],
+        "correctAnswer": 0,
+        "explanation": "#include insère le contenu d'un fichier d'en-tête."
+    },
+    {
+        "id": 22,
+        "type": "multichoix",
+        "question": "Comment définit-on une macro?",
+        "options": [
+            "#define",
+            "#macro",
+            "#def",
+            "#constant"
+        ],
+        "correctAnswer": 0,
+        "explanation": "#define permet de définir des macros et constantes."
+    },
+    {
+        "id": 23,
+        "type": "multichoix",
+        "question": "Quelle fonction lit un caractère depuis l'entrée standard?",
+        "options": [
+            "getchar()",
+            "read()",
+            "getc()",
+            "scanf()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "getchar() lit un caractère depuis stdin."
+    },
+    {
+        "id": 24,
+        "type": "multichoix",
+        "question": "Comment formate-t-on la lecture avec scanf()?",
+        "options": [
+            "scanf(\"%d\", &variable);",
+            "scanf(\"d\", variable);",
+            "scanf(variable, \"%d\");",
+            "scanf(&variable, \"%d\");"
+        ],
+        "correctAnswer": 0,
+        "explanation": "scanf() utilise une chaîne de format et les adresses des variables."
+    },
+    {
+        "id": 25,
+        "type": "multichoix",
+        "question": "Quel est le type d'un tableau lorsqu'il est passé en paramètre?",
+        "options": [
+            "Un pointeur vers le premier élément",
+            "Une copie du tableau",
+            "Le tableau complet",
+            "Une référence"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Quand on passe un tableau à une fonction, c'est en réalité un pointeur vers le premier élément qui est passé."
+    },
+    {
+        "id": 26,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on un pointeur de fonction?",
+        "options": [
+            "int (*ptr)(int, int);",
+            "int *ptr(int, int);",
+            "int ptr(int, int)*;",
+            "function int *ptr(int, int);"
+        ],
+        "correctAnswer": 0,
+        "explanation": "La syntaxe est: type_retour (*nom_pointeur)(paramètres);"
+    },
+    {
+        "id": 27,
+        "type": "multichoix",
+        "question": "Quelle fonction alloue et initialise la mémoire à zéro?",
+        "options": [
+            "malloc()",
+            "calloc()",
+            "realloc()",
+            "alloc()"
+        ],
+        "correctAnswer": 1,
+        "explanation": "calloc() alloue et initialise tous les octets à zéro."
+    },
+    {
+        "id": 28,
+        "type": "multichoix",
+        "question": "Comment redimensionne-t-on un bloc mémoire?",
+        "options": [
+            "malloc()",
+            "calloc()",
+            "realloc()",
+            "resize()"
+        ],
+        "correctAnswer": 2,
+        "explanation": "realloc() change la taille d'un bloc mémoire précédemment alloué."
+    },
+    {
+        "id": 29,
+        "type": "multichoix",
+        "question": "Quel mot-clé permet de partager la mémoire entre variables?",
+        "options": [
+            "union",
+            "struct",
+            "enum",
+            "typedef"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Une union permet à différentes variables de partager le même espace mémoire."
+    },
+    {
+        "id": 30,
+        "type": "multichoix",
+        "question": "Quelle est la différence entre ++i et i++?",
+        "options": [
+            "Aucune différence",
+            "++i incrémente avant d'utiliser, i++ après",
+            "i++ est plus rapide",
+            "++i ne fonctionne qu'avec les entiers"
+        ],
+        "correctAnswer": 1,
+        "explanation": "++i (pré-incrément) incrémente puis utilise la valeur, i++ (post-incrément) utilise puis incrémente."
+    },
+    {
+        "id": 31,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on une constante entière?",
+        "options": [
+            "const int MAX = 100;",
+            "#define MAX 100",
+            "Les deux méthodes",
+            "Aucune des deux"
+        ],
+        "correctAnswer": 2,
+        "explanation": "On peut utiliser const ou #define pour définir des constantes."
+    },
+    {
+        "id": 32,
+        "type": "multichoix",
+        "question": "Quel opérateur donne la taille d'un type ou variable?",
+        "options": [
+            "sizeof",
+            "size",
+            "length",
+            "measure"
+        ],
+        "correctAnswer": 0,
+        "explanation": "sizeof retourne la taille en octets d'un type ou variable."
+    },
+    {
+        "id": 33,
+        "type": "multichoix",
+        "question": "Comment écrit-on un commentaire sur une ligne?",
+        "options": [
+            "// commentaire",
+            "/* commentaire */",
+            "-- commentaire",
+            "# commentaire"
+        ],
+        "correctAnswer": 0,
+        "explanation": "// pour les commentaires sur une ligne (C99), /* */ pour les commentaires multi-lignes."
+    },
+    {
+        "id": 34,
+        "type": "multichoix",
+        "question": "Quelle boucle est garantie de s'exécuter au moins une fois?",
+        "options": [
+            "for",
+            "while",
+            "do-while",
+            "if"
+        ],
+        "correctAnswer": 2,
+        "explanation": "La boucle do-while teste la condition après l'exécution du bloc."
+    },
+    {
+        "id": 35,
+        "type": "multichoix",
+        "question": "Comment sort-on prématurément d'une boucle?",
+        "options": [
+            "break",
+            "continue",
+            "return",
+            "exit"
+        ],
+        "correctAnswer": 0,
+        "explanation": "break sort de la boucle, continue passe à l'itération suivante."
+    },
+    {
+        "id": 36,
+        "type": "multichoix",
+        "question": "Quelle instruction permet de sauter à une étiquette?",
+        "options": [
+            "goto",
+            "jump",
+            "break",
+            "continue"
+        ],
+        "correctAnswer": 0,
+        "explanation": "goto permet de sauter à une étiquette dans la même fonction (à utiliser avec prudence)."
+    },
+    {
+        "id": 37,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on un tableau à deux dimensions?",
+        "options": [
+            "int matrix[3][3];",
+            "int[3][3] matrix;",
+            "int matrix(3,3);",
+            "array int matrix[3][3];"
+        ],
+        "correctAnswer": 0,
+        "explanation": "int matrix[3][3]; déclare un tableau 3x3 d'entiers."
+    },
+    {
+        "id": 38,
+        "type": "multichoix",
+        "question": "Quelle fonction permet de comparer deux blocs mémoire?",
+        "options": [
+            "strcmp()",
+            "memcmp()",
+            "compare()",
+            "bcmp()"
+        ],
+        "correctAnswer": 1,
+        "explanation": "memcmp() compare deux blocs mémoire octet par octet."
+    },
+    {
+        "id": 39,
+        "type": "multichoix",
+        "question": "Comment copie-t-on un bloc mémoire?",
+        "options": [
+            "strcpy()",
+            "memcpy()",
+            "copy()",
+            "bcopy()"
+        ],
+        "correctAnswer": 1,
+        "explanation": "memcpy() copie un bloc mémoire vers un autre."
+    },
+    {
+        "id": 40,
+        "type": "multichoix",
+        "question": "Quelle fonction remplit un bloc mémoire avec une valeur?",
+        "options": [
+            "memset()",
+            "memfill()",
+            "fill()",
+            "setmem()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "memset() remplit un bloc mémoire avec une valeur spécifiée."
+    },
+    {
+        "id": 41,
+        "type": "multichoix",
+        "question": "Quel en-tête contient les fonctions mathématiques?",
+        "options": [
+            "<math.h>",
+            "<stdlib.h>",
+            "<stdio.h>",
+            "<ctype.h>"
+        ],
+        "correctAnswer": 0,
+        "explanation": "math.h contient les déclarations des fonctions mathématiques comme sin(), cos(), sqrt(), etc."
+    },
+    {
+        "id": 42,
+        "type": "multichoix",
+        "question": "Comment convertit-on une chaîne en entier?",
+        "options": [
+            "atoi()",
+            "itoa()",
+            "strtoint()",
+            "parseint()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "atoi() convertit une chaîne en entier (ASCII to Integer)."
+    },
+    {
+        "id": 43,
+        "type": "multichoix",
+        "question": "Comment convertit-on un entier en chaîne?",
+        "options": [
+            "itoa()",
+            "atoi()",
+            "strtoi()",
+            "inttostr()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "itoa() convertit un entier en chaîne (non standard mais commune)."
+    },
+    {
+        "id": 44,
+        "type": "multichoix",
+        "question": "Quelle fonction donne la valeur absolue?",
+        "options": [
+            "abs()",
+            "fabs()",
+            "absolute()",
+            "Les deux premières réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "abs() pour les entiers, fabs() pour les flottants."
+    },
+    {
+        "id": 45,
+        "type": "multichoix",
+        "question": "Comment génère-t-on un nombre aléatoire?",
+        "options": [
+            "rand()",
+            "random()",
+            "rnd()",
+            "aleatoire()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "rand() génère un nombre pseudo-aléatoire."
+    },
+    {
+        "id": 46,
+        "type": "multichoix",
+        "question": "Comment initialise-t-on le générateur de nombres aléatoires?",
+        "options": [
+            "srand()",
+            "initrand()",
+            "randomize()",
+            "seed()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "srand() initialise le générateur avec une graine."
+    },
+    {
+        "id": 47,
+        "type": "multichoix",
+        "question": "Quel type utilise-t-on pour les caractères?",
+        "options": [
+            "char",
+            "string",
+            "character",
+            "byte"
+        ],
+        "correctAnswer": 0,
+        "explanation": "char est le type pour les caractères (généralement 1 octet)."
+    },
+    {
+        "id": 48,
+        "type": "multichoix",
+        "question": "Comment vérifie-t-on si un caractère est une lettre?",
+        "options": [
+            "isalpha()",
+            "isletter()",
+            "ischar()",
+            "isalnum()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "isalpha() vérifie si un caractère est une lettre."
+    },
+    {
+        "id": 49,
+        "type": "multichoix",
+        "question": "Quelle fonction met un caractère en majuscule?",
+        "options": [
+            "toupper()",
+            "touppercase()",
+            "upper()",
+            "capitalize()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "toupper() convertit un caractère en majuscule."
+    },
+    {
+        "id": 50,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on un pointeur constant?",
+        "options": [
+            "const int *ptr;",
+            "int const *ptr;",
+            "int * const ptr;",
+            "Les trois réponses"
+        ],
+        "correctAnswer": 2,
+        "explanation": "int * const ptr; - le pointeur est constant (ne peut pointer ailleurs), mais la valeur pointée peut changer."
+    },
+    {
+        "id": 51,
+        "type": "multichoix",
+        "question": "Qu'est-ce qu'un pointeur nul?",
+        "options": [
+            "NULL",
+            "0",
+            "void*",
+            "Les deux premières réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "NULL est généralement défini comme 0 ou (void*)0."
+    },
+    {
+        "id": 52,
+        "type": "multichoix",
+        "question": "Comment vérifie-t-on l'échec de malloc()?",
+        "options": [
+            "if (ptr == NULL)",
+            "if (ptr == 0)",
+            "if (!ptr)",
+            "Toutes ces réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "Toutes ces méthodes vérifient si l'allocation a échoué."
+    },
+    {
+        "id": 53,
+        "type": "multichoix",
+        "question": "Quelle est la taille d'un int en général?",
+        "options": [
+            "4 octets",
+            "2 octets",
+            "8 octets",
+            "Dépend de l'architecture"
+        ],
+        "correctAnswer": 3,
+        "explanation": "La taille des types dépend de l'architecture et du compilateur."
+    },
+    {
+        "id": 54,
+        "type": "multichoix",
+        "question": "Comment écrit-on un littéral de type long?",
+        "options": [
+            "123L",
+            "123l",
+            "123long",
+            "Les deux premières réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "On utilise L ou l après le nombre pour un littéral long."
+    },
+    {
+        "id": 55,
+        "type": "multichoix",
+        "question": "Quel format utilise-t-on pour printf() avec un float?",
+        "options": [
+            "%f",
+            "%d",
+            "%s",
+            "%c"
+        ],
+        "correctAnswer": 0,
+        "explanation": "%f pour les float, %lf pour les double."
+    },
+    {
+        "id": 56,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on un tableau de pointeurs?",
+        "options": [
+            "int *arr[10];",
+            "int (*arr)[10];",
+            "int arr*[10];",
+            "pointer int arr[10];"
+        ],
+        "correctAnswer": 0,
+        "explanation": "int *arr[10]; déclare un tableau de 10 pointeurs vers int."
+    },
+    {
+        "id": 57,
+        "type": "multichoix",
+        "question": "Qu'est-ce que l'arithmétique des pointeurs?",
+        "options": [
+            "Addition/soustraction d'entiers à des pointeurs",
+            "Multiplication de pointeurs",
+            "Division de pointeurs",
+            "Toutes ces réponses"
+        ],
+        "correctAnswer": 0,
+        "explanation": "On peut ajouter/soustraire des entiers à des pointeurs, mais pas les multiplier/diviser."
+    },
+    {
+        "id": 58,
+        "type": "multichoix",
+        "question": "Que fait p++ si p est un pointeur vers int?",
+        "options": [
+            "Ajoute 1 à la valeur pointée",
+            "Avance de sizeof(int) octets",
+            "Recule de sizeof(int) octets",
+            "Ajoute 1 à l'adresse"
+        ],
+        "correctAnswer": 1,
+        "explanation": "p++ avance le pointeur de la taille du type pointé (sizeof(int))."
+    },
+    {
+        "id": 59,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on une fonction qui ne prend pas de paramètres?",
+        "options": [
+            "void func();",
+            "void func(void);",
+            "Les deux méthodes",
+            "Aucune des deux"
+        ],
+        "correctAnswer": 1,
+        "explanation": "void func(void); déclare explicitement une fonction sans paramètres."
+    },
+    {
+        "id": 60,
+        "type": "multichoix",
+        "question": "Quel mot-clé permet de retourner plusieurs valeurs d'une fonction?",
+        "options": [
+            "struct",
+            "return",
+            "void",
+            "Aucun - impossible directement"
+        ],
+        "correctAnswer": 3,
+        "explanation": "On ne peut retourner qu'une seule valeur directement, mais on peut utiliser des pointeurs en paramètres ou une structure."
+    }
+];
 
       document.getElementById("progress-text").textContent =
         "Question 1/" + quizQuestions.length;
