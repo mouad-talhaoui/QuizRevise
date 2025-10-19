@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Linux</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen py-8">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-indigo-800 mb-2">Quiz Linux</h1>
+        <p class="text-lg text-gray-600">Testez vos connaissances en Linux</p>
+      </div>
+
+      <!-- Quiz Container -->
+      <div id="quiz-container" class="bg-white rounded-xl shadow-lg p-6 mb-6">
+        <!-- Progress Bar -->
+        <div class="mb-6">
+          <div class="flex justify-between mb-2">
+            <span class="text-sm font-medium text-indigo-700">Progression</span>
+            <span id="progress-text" class="text-sm font-medium text-indigo-700"
+              >Question 1/5</span
+            >
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div
+              id="progress-bar"
+              class="bg-indigo-600 h-2.5 rounded-full"
+              style="width: 20%"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Question Container -->
+        <div id="question-container" class="mb-8">
+          <!-- Question will be dynamically inserted here -->
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between">
+          <button
+            id="prev-btn"
+            class="flex items-center justify-center px-5 py-2 text-sm text-indigo-700 transition-colors duration-150 bg-indigo-100 rounded-lg hover:bg-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <i class="fas fa-arrow-left mr-2"></i> Précédent
+          </button>
+          <button
+            id="next-btn"
+            class="flex items-center justify-center px-5 py-2 text-sm text-white transition-colors duration-150 bg-indigo-600 rounded-lg hover:bg-indigo-700"
+          >
+            Suivant <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+          <button
+            id="results-btn"
+            class="hidden flex items-center justify-center px-5 py-2 text-sm text-white transition-colors duration-150 bg-green-600 rounded-lg hover:bg-green-700"
+          >
+            Voir les résultats <i class="fas fa-chart-bar ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Results Container -->
+      <div
+        id="results-container"
+        class="hidden bg-white rounded-xl shadow-lg p-6"
+      >
+        <div class="text-center mb-6">
+          <h2 class="text-2xl font-bold text-indigo-800 mb-2">
+            Résultats du Quiz
+          </h2>
+          <div
+            class="inline-flex items-center px-4 py-2 bg-indigo-100 text-indigo-800 rounded-full"
+          >
+            <i class="fas fa-trophy mr-2"></i>
+            <span id="score-text" class="font-bold">Score: 0/5</span>
+          </div>
+        </div>
+
+        <div id="results-list" class="space-y-4">
+          <!-- Results will be dynamically inserted here -->
+        </div>
+
+        <div class="mt-8 text-center">
+          <button
+            id="restart-btn"
+            class="px-6 py-3 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-150"
+          >
+            <i class="fas fa-redo mr-2"></i>Recommencer le Quiz
+          </button>
+        </div>
+
+        <div class="mt-8 text-center">
+          <a
+            id="restart-btn"
+            href="index.html"
+            class="px-6 py-3 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-150"
+          >
+            <i class="fas fa-redo mr-2"></i>Revenir à la page principale
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      localStorage.clear();
+      // Quiz questions data
+      const quizQuestions = [
+        {
+          id: 1,
+          type: "multichoix",
+          question:
+            "Quelle commande permet de lister les fichiers et répertoires dans Linux?",
+          options: ["dir", "list", "ls", "show"],
+          correctAnswer: 2,
+          explanation:
+            "La commande 'ls' est utilisée pour lister le contenu d'un répertoire dans les systèmes Linux/Unix.",
+        },
+        {
+          id: 2,
+          type: "multichoix",
+          question: "Quel est le répertoire racine dans l'arborescence Linux?",
+          options: ["/root", "/home", "/", "/bin"],
+          correctAnswer: 2,
+          explanation:
+            "Le répertoire '/' est la racine de l'arborescence du système de fichiers Linux.",
+        },
+        {
+          id: 3,
+          type: "multichoix",
+          question: "Quelle commande permet de changer le répertoire courant?",
+          options: ["cd", "chdir", "move", "goto"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'cd' (change directory) permet de naviguer entre les répertoires.",
+        },
+        {
+          id: 4,
+          type: "multichoix",
+          question: "Quelle commande affiche le répertoire courant?",
+          options: ["pwd", "cwd", "where", "path"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'pwd' (print working directory) affiche le chemin complet du répertoire courant.",
+        },
+        {
+          id: 5,
+          type: "multichoix",
+          question: "Quelle commande permet de créer un nouveau répertoire?",
+          options: ["mkdir", "newdir", "createdir", "md"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'mkdir' (make directory) crée un nouveau répertoire.",
+        },
+        {
+          id: 6,
+          type: "multichoix",
+          question: "Quelle commande supprime un fichier?",
+          options: ["del", "rm", "remove", "delete"],
+          correctAnswer: 1,
+          explanation:
+            "La commande 'rm' (remove) supprime des fichiers. Attention: cette action est irréversible!",
+        },
+        {
+          id: 7,
+          type: "multichoix",
+          question: "Quelle commande copie des fichiers ou répertoires?",
+          options: ["copy", "cp", "duplicate", "clone"],
+          correctAnswer: 1,
+          explanation:
+            "La commande 'cp' (copy) permet de copier des fichiers ou répertoires.",
+        },
+        {
+          id: 8,
+          type: "multichoix",
+          question: "Quelle commande déplace ou renomme des fichiers?",
+          options: ["mv", "move", "rename", "shift"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'mv' (move) permet de déplacer ou renommer des fichiers et répertoires.",
+        },
+        {
+          id: 9,
+          type: "multichoix",
+          question: "Quelle commande affiche le contenu d'un fichier?",
+          options: ["display", "show", "cat", "type"],
+          correctAnswer: 2,
+          explanation:
+            "La commande 'cat' (concatenate) affiche le contenu d'un ou plusieurs fichiers.",
+        },
+        {
+          id: 10,
+          type: "multichoix",
+          question: "Quelle commande permet de rechercher des fichiers?",
+          options: ["search", "find", "locate", "Les deux dernières réponses"],
+          correctAnswer: 3,
+          explanation:
+            "Les commandes 'find' et 'locate' sont utilisées pour rechercher des fichiers, avec des approches différentes.",
+        },
+        {
+          id: 11,
+          type: "multichoix",
+          question:
+            "Quelle commande affiche les processus en cours d'exécution?",
+          options: ["ps", "process", "top", "Les deux premières réponses"],
+          correctAnswer: 3,
+          explanation:
+            "'ps' montre un instantané des processus, 'top' les affiche en temps réel avec mise à jour continue.",
+        },
+        {
+          id: 12,
+          type: "multichoix",
+          question: "Quelle commande permet de tuer un processus?",
+          options: ["kill", "stop", "terminate", "end"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'kill' envoie un signal à un processus, généralement pour le terminer.",
+        },
+        {
+          id: 13,
+          type: "multichoix",
+          question: "Quelle commande affiche l'historique des commandes?",
+          options: ["history", "hist", "log", "previous"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'history' affiche la liste des commandes précédemment exécutées.",
+        },
+        {
+          id: 14,
+          type: "multichoix",
+          question:
+            "Quel caractère représente le répertoire home de l'utilisateur?",
+          options: ["~", "$HOME", ".", ".."],
+          correctAnswer: 0,
+          explanation:
+            "Le tilde '~' est un raccourci pour le répertoire home de l'utilisateur courant.",
+        },
+        {
+          id: 15,
+          type: "multichoix",
+          question: "Quelle commande modifie les permissions d'un fichier?",
+          options: ["chmod", "chown", "chperm", "perm"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'chmod' (change mode) modifie les permissions d'accès aux fichiers.",
+        },
+        {
+          id: 16,
+          type: "multichoix",
+          question: "Quelle commande change le propriétaire d'un fichier?",
+          options: ["chown", "chuser", "own", "chmod"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'chown' (change owner) modifie le propriétaire d'un fichier ou répertoire.",
+        },
+        {
+          id: 17,
+          type: "multichoix",
+          question:
+            "Quelle commande affiche l'emplacement d'une commande exécutable?",
+          options: ["where", "which", "locate", "find"],
+          correctAnswer: 1,
+          explanation:
+            "La commande 'which' montre le chemin complet d'une commande exécutable.",
+        },
+        {
+          id: 18,
+          type: "multichoix",
+          question:
+            "Quelle commande permet d'éditer un fichier texte en ligne de commande?",
+          options: ["vi", "nano", "vim", "Toutes ces réponses"],
+          correctAnswer: 3,
+          explanation:
+            "Vi, Vim et Nano sont tous des éditeurs de texte disponibles en ligne de commande sous Linux.",
+        },
+        {
+          id: 19,
+          type: "multichoix",
+          question: "Quelle commande affiche l'espace disque utilisé?",
+          options: ["du", "df", "disk", "space"],
+          correctAnswer: 1,
+          explanation:
+            "La commande 'df' (disk free) montre l'espace disque disponible, 'du' (disk usage) montre l'espace utilisé par les fichiers.",
+        },
+        {
+          id: 20,
+          type: "multichoix",
+          question: "Quel fichier contient les mots de passe des utilisateurs?",
+          options: ["/etc/passwd", "/etc/shadow", "/etc/users", "/etc/group"],
+          correctAnswer: 1,
+          explanation:
+            "/etc/shadow contient les mots de passe chiffrés des utilisateurs. /etc/passwd contient les informations utilisateurs sans les mots de passe.",
+        },
+        {
+          id: 21,
+          type: "multichoix",
+          question:
+            "Quelle commande permet de se connecter en tant qu'administrateur?",
+          options: ["admin", "su", "root", "sudo"],
+          correctAnswer: 1,
+          explanation:
+            "La commande 'su' (switch user) permet de changer d'utilisateur, souvent utilisé pour devenir root.",
+        },
+        {
+          id: 22,
+          type: "multichoix",
+          question: "Quelle commande redémarre le système?",
+          options: [
+            "restart",
+            "reboot",
+            "shutdown -r",
+            "Les deux dernières réponses",
+          ],
+          correctAnswer: 3,
+          explanation:
+            "'reboot' et 'shutdown -r' permettent de redémarrer le système.",
+        },
+        {
+          id: 23,
+          type: "multichoix",
+          question: "Quelle commande affiche le manuel d'une commande?",
+          options: ["help", "man", "info", "Les deux dernières réponses"],
+          correctAnswer: 3,
+          explanation:
+            "'man' et 'info' affichent la documentation des commandes, avec des formats différents.",
+        },
+        {
+          id: 24,
+          type: "multichoix",
+          question:
+            "Quel caractère redirige la sortie standard vers un fichier en écrasant?",
+          options: [">", ">>", "<", "|"],
+          correctAnswer: 0,
+          explanation:
+            "Le caractère '>' redirige la sortie vers un fichier en écrasant son contenu, '>>' ajoute à la fin.",
+        },
+        {
+          id: 25,
+          type: "multichoix",
+          question: "Quel caractère permet de chaîner des commandes?",
+          options: ["&", "|", ";", "&&"],
+          correctAnswer: 1,
+          explanation:
+            "Le pipe '|' permet de rediriger la sortie d'une commande vers l'entrée d'une autre commande.",
+        },
+        {
+          id: 26,
+          type: "multichoix",
+          question: "Quelle commande permet de compresser des fichiers?",
+          options: ["zip", "gzip", "tar", "Toutes ces réponses"],
+          correctAnswer: 3,
+          explanation:
+            "Plusieurs commandes de compression existent: zip, gzip, bzip2, et tar pour archiver.",
+        },
+        {
+          id: 27,
+          type: "multichoix",
+          question:
+            "Quelle commande affiche les dernières lignes d'un fichier?",
+          options: ["head", "tail", "end", "last"],
+          correctAnswer: 1,
+          explanation:
+            "La commande 'tail' affiche les dernières lignes d'un fichier, utile pour les fichiers de log.",
+        },
+        {
+          id: 28,
+          type: "multichoix",
+          question: "Quelle commande compare deux fichiers?",
+          options: ["diff", "compare", "cmp", "Les deux premières réponses"],
+          correctAnswer: 3,
+          explanation:
+            "'diff' et 'cmp' permettent de comparer des fichiers, avec des sorties différentes.",
+        },
+        {
+          id: 29,
+          type: "multichoix",
+          question: "Quelle commande affiche le calendrier?",
+          options: ["cal", "calendar", "date", "time"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'cal' affiche un calendrier, 'date' affiche la date et l'heure courante.",
+        },
+        {
+          id: 30,
+          type: "multichoix",
+          question:
+            "Quelle commande permet de télécharger des fichiers depuis internet?",
+          options: ["wget", "curl", "download", "Les deux premières réponses"],
+          correctAnswer: 3,
+          explanation:
+            "'wget' et 'curl' sont deux commandes populaires pour télécharger des fichiers depuis internet.",
+        },
+        {
+          id: 31,
+          type: "multichoix",
+          question: "Quelle commande affiche les variables d'environnement?",
+          options: ["env", "set", "printenv", "Toutes ces réponses"],
+          correctAnswer: 3,
+          explanation:
+            "'env', 'set' et 'printenv' affichent les variables d'environnement avec des différences de format.",
+        },
+        {
+          id: 32,
+          type: "multichoix",
+          question: "Quelle commande permet de créer un lien symbolique?",
+          options: ["ln -s", "link", "symlink", "mklink"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'ln -s' crée un lien symbolique (équivalent d'un raccourci).",
+        },
+        {
+          id: 33,
+          type: "multichoix",
+          question: "Quelle commande affiche les utilisateurs connectés?",
+          options: ["who", "w", "users", "Toutes ces réponses"],
+          correctAnswer: 3,
+          explanation:
+            "'who', 'w' et 'users' affichent des informations sur les utilisateurs connectés.",
+        },
+        {
+          id: 34,
+          type: "multichoix",
+          question:
+            "Quelle commande permet de monitorer les logs en temps réel?",
+          options: ["tail -f", "watch", "logwatch", "monitor"],
+          correctAnswer: 0,
+          explanation:
+            "'tail -f' permet de suivre l'évolution d'un fichier en temps réel, très utile pour les logs.",
+        },
+        {
+          id: 35,
+          type: "multichoix",
+          question: "Quelle commande vérifie la connectivité réseau?",
+          options: ["ping", "netstat", "ifconfig", "ip"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'ping' teste la connectivité vers une adresse IP ou un nom d'hôte.",
+        },
+        {
+          id: 36,
+          type: "multichoix",
+          question:
+            "Quelle commande affiche les informations sur les interfaces réseau?",
+          options: ["ifconfig", "ip addr", "netstat -i", "Toutes ces réponses"],
+          correctAnswer: 3,
+          explanation:
+            "Plusieurs commandes permettent d'afficher les informations réseau: ifconfig, ip, netstat.",
+        },
+        {
+          id: 37,
+          type: "multichoix",
+          question: "Quelle commande affiche les tables de routage?",
+          options: ["route", "ip route", "netstat -r", "Toutes ces réponses"],
+          explanation:
+            "'route', 'ip route' et 'netstat -r' affichent la table de routage du système.",
+        },
+        {
+          id: 38,
+          type: "multichoix",
+          question: "Quelle commande scanne les ports ouverts?",
+          options: ["nmap", "netstat", "ss", "portscan"],
+          correctAnswer: 0,
+          explanation:
+            "'nmap' est un outil puissant pour scanner les ports réseau et découvrir les services.",
+        },
+        {
+          id: 39,
+          type: "multichoix",
+          question: "Quelle commande permet de faire du SSH?",
+          options: ["ssh", "telnet", "remote", "connect"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'ssh' (secure shell) permet de se connecter à distance de manière sécurisée à un autre système.",
+        },
+        {
+          id: 40,
+          type: "multichoix",
+          question: "Quelle commande copie des fichiers via SSH?",
+          options: ["scp", "sftp", "rsync", "Les deux premières réponses"],
+          correctAnswer: 3,
+          explanation:
+            "'scp' et 'sftp' permettent de copier des fichiers via SSH, 'rsync' peut aussi utiliser SSH.",
+        },
+        {
+          id: 41,
+          type: "multichoix",
+          question: "Quelle commande affiche les informations système?",
+          options: [
+            "uname -a",
+            "lsb_release -a",
+            "cat /etc/os-release",
+            "Toutes ces réponses",
+          ],
+          correctAnswer: 3,
+          explanation:
+            "Plusieurs commandes donnent des informations sur le système et sa version.",
+        },
+        {
+          id: 42,
+          type: "multichoix",
+          question: "Quelle commande montre l'utilisation de la mémoire?",
+          options: ["free", "vmstat", "top", "Toutes ces réponses"],
+          correctAnswer: 3,
+          explanation:
+            "'free', 'vmstat' et 'top' montrent tous des informations sur l'utilisation de la mémoire.",
+        },
+        {
+          id: 43,
+          type: "multichoix",
+          question: "Quelle commande planifie l'exécution de tâches?",
+          options: ["cron", "at", "sleep", "Les deux premières réponses"],
+          correctAnswer: 3,
+          explanation:
+            "'cron' pour les tâches récurrentes, 'at' pour les tâches ponctuelles.",
+        },
+        {
+          id: 44,
+          type: "multichoix",
+          question: "Quelle commande édite la table cron d'un utilisateur?",
+          options: ["crontab -e", "editcron", "cronedit", "vim /etc/crontab"],
+          correctAnswer: 0,
+          explanation:
+            "'crontab -e' ouvre l'éditeur pour modifier les tâches cron de l'utilisateur courant.",
+        },
+        {
+          id: 45,
+          type: "multichoix",
+          question: "Quelle commande change le mot de passe d'un utilisateur?",
+          options: ["passwd", "chpasswd", "password", "pwd"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'passwd' permet à un utilisateur de changer son propre mot de passe.",
+        },
+        {
+          id: 46,
+          type: "multichoix",
+          question: "Quelle commande ajoute un nouvel utilisateur?",
+          options: [
+            "useradd",
+            "adduser",
+            "newuser",
+            "Les deux premières réponses",
+          ],
+          correctAnswer: 3,
+          explanation:
+            "'useradd' (low-level) et 'adduser' (high-level, plus convivial) créent de nouveaux utilisateurs.",
+        },
+        {
+          id: 47,
+          type: "multichoix",
+          question: "Quelle commande supprime un utilisateur?",
+          options: [
+            "userdel",
+            "deluser",
+            "rmuser",
+            "Les deux premières réponses",
+          ],
+          correctAnswer: 3,
+          explanation:
+            "'userdel' et 'deluser' permettent de supprimer des comptes utilisateurs.",
+        },
+        {
+          id: 48,
+          type: "multichoix",
+          question: "Quelle commande montre les groupes d'un utilisateur?",
+          options: ["groups", "id", "whoami", "Les deux premières réponses"],
+          correctAnswer: 3,
+          explanation:
+            "'groups' et 'id' montrent les groupes auxquels appartient un utilisateur.",
+        },
+        {
+          id: 49,
+          type: "multichoix",
+          question: "Quelle commande démonte un système de fichiers?",
+          options: ["umount", "unmount", "demount", "mount -u"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'umount' (sans 'n') permet de démonter un système de fichiers.",
+        },
+        {
+          id: 50,
+          type: "multichoix",
+          question: "Quelle commande affiche les systèmes de fichiers montés?",
+          options: ["mount", "df", "lsblk", "Toutes ces réponses"],
+          correctAnswer: 3,
+          explanation:
+            "Plusieurs commandes montrent les systèmes de fichiers: mount, df, lsblk avec des informations différentes.",
+        },
+        {
+          id: 51,
+          type: "multichoix",
+          question: "Quelle commande recherche du texte dans des fichiers?",
+          options: ["grep", "find", "search", "locate"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'grep' recherche des motifs (patterns) dans des fichiers texte.",
+        },
+        {
+          id: 52,
+          type: "multichoix",
+          question: "Quelle commande trie les lignes d'un fichier?",
+          options: ["sort", "order", "arrange", "rank"],
+          correctAnswer: 0,
+          explanation: "La commande 'sort' trie les lignes d'un fichier texte.",
+        },
+        {
+          id: 53,
+          type: "multichoix",
+          question:
+            "Quelle commande supprime les doublons dans un fichier trié?",
+          options: ["uniq", "unique", "distinct", "dedup"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'uniq' supprime les lignes consécutives en double dans un fichier trié.",
+        },
+        {
+          id: 54,
+          type: "multichoix",
+          question: "Quelle commande compte les lignes, mots et caractères?",
+          options: ["wc", "count", "stats", "size"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'wc' (word count) compte les lignes, mots et caractères d'un fichier.",
+        },
+        {
+          id: 55,
+          type: "multichoix",
+          question: "Quelle commande coupe des sections de chaque ligne?",
+          options: ["cut", "slice", "split", "extract"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'cut' extrait des sections de chaque ligne d'un fichier.",
+        },
+        {
+          id: 56,
+          type: "multichoix",
+          question: "Quelle commande remplace du texte dans un flux?",
+          options: ["sed", "replace", "sub", "tr"],
+          correctAnswer: 0,
+          explanation:
+            "La commande 'sed' (stream editor) permet de filtrer et transformer du texte.",
+        },
+        {
+          id: 57,
+          type: "multichoix",
+          question: "Quelle commande traite du texte en langage AWK?",
+          options: ["awk", "gawk", "nawk", "Toutes ces réponses"],
+          correctAnswer: 3,
+          explanation:
+            "AWK est un langage de traitement de texte, disponible sous différentes implémentations.",
+        },
+        {
+          id: 58,
+          type: "multichoix",
+          question: "Quelle commande archive des fichiers?",
+          options: ["tar", "zip", "archive", "Les deux premières réponses"],
+          correctAnswer: 3,
+          explanation:
+            "'tar' crée des archives, souvent combiné avec gzip ou bzip2 pour la compression.",
+        },
+        {
+          id: 59,
+          type: "multichoix",
+          question: "Quelle option de tar permet de créer une archive?",
+          options: ["-c", "-x", "-t", "-f"],
+          correctAnswer: 0,
+          explanation:
+            "'tar -c' crée une archive, '-x' extrait, '-t' liste le contenu, '-f' spécifie le fichier.",
+        },
+        {
+          id: 60,
+          type: "multichoix",
+          question: "Quelle commande vérifie l'intégrité d'un fichier?",
+          options: [
+            "md5sum",
+            "sha1sum",
+            "checksum",
+            "Les deux premières réponses",
+          ],
+          correctAnswer: 3,
+          explanation:
+            "'md5sum' et 'sha1sum' calculent des sommes de contrôle pour vérifier l'intégrité des fichiers.",
+        },
+        {
+          id: 61,
+          type: "multichoix",
+          question:
+            "Quelle commande affiche le chemin de recherche des commandes?",
+          options: ["echo $PATH", "which", "whereis", "path"],
+          correctAnswer: 0,
+          explanation:
+            "La variable d'environnement $PATH contient les répertoires où le shell recherche les commandes.",
+        },
+        {
+          id: 62,
+          type: "multichoix",
+          question:
+            "Quelle commande exécute une commande avec des privilèges élevés?",
+          options: ["sudo", "su", "admin", "Les deux premières réponses"],
+          correctAnswer: 3,
+          explanation:
+            "'sudo' exécute une commande en tant que superutilisateur, 'su' change d'utilisateur complètement.",
+        },
+        {
+          id: 63,
+          type: "multichoix",
+          question:
+            "Quelle commande affiche les informations sur le processeur?",
+          options: [
+            "lscpu",
+            "cat /proc/cpuinfo",
+            "cpuinfo",
+            "Les deux premières réponses",
+          ],
+          explanation:
+            "'lscpu' et 'cat /proc/cpuinfo' affichent des informations détaillées sur le processeur.",
+        },
+        {
+          id: 64,
+          type: "multichoix",
+          question: "Quelle commande montre l'utilisation du swap?",
+          options: ["free", "swapon -s", "vmstat", "Toutes ces réponses"],
+          correctAnswer: 3,
+          explanation:
+            "Plusieurs commandes montrent l'utilisation de la mémoire swap: free, swapon, vmstat.",
+        },
+        {
+          id: 65,
+          type: "multichoix",
+          question: "Quelle commande nettoie le terminal?",
+          options: ["clear", "reset", "cls", "Les deux premières réponses"],
+          correctAnswer: 3,
+          explanation:
+            "'clear' efface l'écran du terminal, 'reset' réinitialise le terminal complètement.",
+        },
+      ];
+
+      document.getElementById("progress-text").textContent =
+        "Question 1/" + quizQuestions.length;
+
+      // DOM Elements
+      const questionContainer = document.getElementById("question-container");
+      const progressBar = document.getElementById("progress-bar");
+      const progressText = document.getElementById("progress-text");
+      const prevBtn = document.getElementById("prev-btn");
+      const nextBtn = document.getElementById("next-btn");
+      const resultsBtn = document.getElementById("results-btn");
+      const quizContainer = document.getElementById("quiz-container");
+      const resultsContainer = document.getElementById("results-container");
+      const scoreText = document.getElementById("score-text");
+      const resultsList = document.getElementById("results-list");
+      const restartBtn = document.getElementById("restart-btn");
+
+      // Quiz state
+      let currentQuestionIndex = 0;
+      let userAnswers =
+        JSON.parse(localStorage.getItem("javaQuizAnswers")) ||
+        Array(quizQuestions.length).fill(null);
+
+      // Initialize the quiz
+      function initQuiz() {
+        displayQuestion(currentQuestionIndex);
+        updateProgress();
+        updateNavigationButtons();
+      }
+
+      // Display current question
+      function displayQuestion(index) {
+        const question = quizQuestions[index];
+        let questionHTML = "";
+
+        if (question.type === "vrai-faux") {
+          questionHTML = `
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">${
+                          question.question
+                        }</h3>
+                        <div class="flex space-x-4">
+                            <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-150 flex-1 ${
+                              userAnswers[index] === "vrai"
+                                ? "border-indigo-500 bg-indigo-50"
+                                : ""
+                            }">
+                                <input type="radio" name="answer" value="vrai" class="hidden" ${
+                                  userAnswers[index] === "vrai" ? "checked" : ""
+                                }>
+                                <div class="flex items-center justify-center w-6 h-6 border-2 border-gray-300 rounded-full mr-3 ${
+                                  userAnswers[index] === "vrai"
+                                    ? "border-indigo-500 bg-indigo-500"
+                                    : ""
+                                }">
+                                    ${
+                                      userAnswers[index] === "vrai"
+                                        ? '<i class="fas fa-check text-white text-xs"></i>'
+                                        : ""
+                                    }
+                                </div>
+                                <span class="text-lg">Vrai</span>
+                            </label>
+                            <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-150 flex-1 ${
+                              userAnswers[index] === "faux"
+                                ? "border-indigo-500 bg-indigo-50"
+                                : ""
+                            }">
+                                <input type="radio" name="answer" value="faux" class="hidden" ${
+                                  userAnswers[index] === "faux" ? "checked" : ""
+                                }>
+                                <div class="flex items-center justify-center w-6 h-6 border-2 border-gray-300 rounded-full mr-3 ${
+                                  userAnswers[index] === "faux"
+                                    ? "border-indigo-500 bg-indigo-500"
+                                    : ""
+                                }">
+                                    ${
+                                      userAnswers[index] === "faux"
+                                        ? '<i class="fas fa-check text-white text-xs"></i>'
+                                        : ""
+                                    }
+                                </div>
+                                <span class="text-lg">Faux</span>
+                            </label>
+                        </div>
+                    </div>
+                `;
+        } else if (question.type === "multichoix") {
+          questionHTML = `
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">${
+                          question.question
+                        }</h3>
+                        <div class="space-y-3">
+                            ${question.options
+                              .map(
+                                (option, i) => `
+                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-150 ${
+                                  userAnswers[index] === i
+                                    ? "border-indigo-500 bg-indigo-50"
+                                    : ""
+                                }">
+                                    <input type="radio" name="answer" value="${i}" class="hidden" ${
+                                  userAnswers[index] === i ? "checked" : ""
+                                }>
+                                    <div class="flex items-center justify-center w-6 h-6 border-2 border-gray-300 rounded-full mr-3 ${
+                                      userAnswers[index] === i
+                                        ? "border-indigo-500 bg-indigo-500"
+                                        : ""
+                                    }">
+                                        ${
+                                          userAnswers[index] === i
+                                            ? '<i class="fas fa-check text-white text-xs"></i>'
+                                            : ""
+                                        }
+                                    </div>
+                                    <span class="text-lg">${option}</span>
+                                </label>
+                            `
+                              )
+                              .join("")}
+                        </div>
+                    </div>
+                `;
+        }
+
+        questionContainer.innerHTML = questionHTML;
+
+        // Add event listeners to answer options
+        const answerOptions = questionContainer.querySelectorAll("label");
+        answerOptions.forEach((option) => {
+          option.addEventListener("click", () => {
+            // Remove selection from all options
+            answerOptions.forEach((opt) => {
+              opt.classList.remove("border-indigo-500", "bg-indigo-50");
+              const radio = opt.querySelector('input[type="radio"]');
+              const checkIcon = opt.querySelector(".fa-check");
+              if (checkIcon) {
+                checkIcon.parentElement.classList.remove(
+                  "border-indigo-500",
+                  "bg-indigo-500"
+                );
+                checkIcon.remove();
+              }
+            });
+
+            // Select clicked option
+            option.classList.add("border-indigo-500", "bg-indigo-50");
+            const radio = option.querySelector('input[type="radio"]');
+            radio.checked = true;
+
+            const checkDiv = option.querySelector("div");
+            checkDiv.classList.add("border-indigo-500", "bg-indigo-500");
+            checkDiv.innerHTML =
+              '<i class="fas fa-check text-white text-xs"></i>';
+
+            // Save answer
+            saveAnswer(index, radio.value);
+          });
+        });
+      }
+
+      // Save answer to localStorage
+      function saveAnswer(index, answer) {
+        userAnswers[index] = answer;
+        localStorage.setItem("javaQuizAnswers", JSON.stringify(userAnswers));
+        updateNavigationButtons();
+      }
+
+      // Update progress bar and text
+      function updateProgress() {
+        const progress =
+          ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+        progressBar.style.width = `${progress}%`;
+        progressText.textContent = `Question ${currentQuestionIndex + 1}/${
+          quizQuestions.length
+        }`;
+      }
+
+      // Update navigation buttons state
+      function updateNavigationButtons() {
+        prevBtn.disabled = currentQuestionIndex === 0;
+
+        if (currentQuestionIndex === quizQuestions.length - 1) {
+          nextBtn.classList.add("hidden");
+          resultsBtn.classList.remove("hidden");
+        } else {
+          nextBtn.classList.remove("hidden");
+          resultsBtn.classList.add("hidden");
+        }
+      }
+
+      // Show results
+      function showResults() {
+        let score = 0;
+        resultsList.innerHTML = "";
+
+        quizQuestions.forEach((question, index) => {
+          const userAnswer = userAnswers[index];
+          let isCorrect = false;
+
+          if (question.type === "vrai-faux") {
+            isCorrect = userAnswer === question.correctAnswer;
+          } else if (question.type === "multichoix") {
+            isCorrect = parseInt(userAnswer) === question.correctAnswer;
+          }
+
+          if (isCorrect) score++;
+
+          const resultItem = document.createElement("div");
+          resultItem.className = `p-4 rounded-lg border ${
+            isCorrect
+              ? "bg-green-50 border-green-200"
+              : "bg-red-50 border-red-200"
+          }`;
+
+          let userAnswerText = "";
+          if (question.type === "vrai-faux") {
+            userAnswerText = userAnswer || "Non répondu";
+          } else if (question.type === "multichoix") {
+            userAnswerText =
+              userAnswer !== null
+                ? question.options[userAnswer]
+                : "Non répondu";
+          }
+
+          resultItem.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1 mr-3">
+                            <i class="fas ${
+                              isCorrect
+                                ? "fa-check-circle text-green-500"
+                                : "fa-times-circle text-red-500"
+                            }"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800">${
+                              question.question
+                            }</h4>
+                            <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <div class="${
+                                  isCorrect ? "text-green-700" : "text-red-700"
+                                }">
+                                    <span class="font-medium">Votre réponse:</span>  ${
+                                      !userAnswerText
+                                        ? "vous n'avez pas répondu"
+                                        : userAnswerText
+                                    }
+                                </div>
+                                ${
+                                  !isCorrect
+                                    ? `
+                                    <div class="text-green-700">
+                                        <span class="font-medium">Bonne réponse:</span> 
+                                        ${
+                                          question.type === "vrai-faux"
+                                            ? question.correctAnswer
+                                            : question.options[
+                                                question.correctAnswer
+                                              ]
+                                        }
+                                    </div>
+                                `
+                                    : ""
+                                }
+                            </div>
+                            <div class="mt-2 text-gray-600 text-sm">
+                                <i class="fas fa-info-circle mr-1"></i> ${
+                                  question.explanation
+                                }
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+          resultsList.appendChild(resultItem);
+        });
+
+        scoreText.textContent = `Score: ${score}/${quizQuestions.length}`;
+        quizContainer.classList.add("hidden");
+        resultsContainer.classList.remove("hidden");
+      }
+
+      // Event Listeners
+      prevBtn.addEventListener("click", () => {
+        if (currentQuestionIndex > 0) {
+          currentQuestionIndex--;
+          displayQuestion(currentQuestionIndex);
+          updateProgress();
+          updateNavigationButtons();
+        }
+      });
+
+      nextBtn.addEventListener("click", () => {
+        if (currentQuestionIndex < quizQuestions.length - 1) {
+          currentQuestionIndex++;
+          displayQuestion(currentQuestionIndex);
+          updateProgress();
+          updateNavigationButtons();
+        }
+      });
+
+      resultsBtn.addEventListener("click", showResults);
+
+      restartBtn.addEventListener("click", () => {
+        // Clear saved answers
+        localStorage.removeItem("javaQuizAnswers");
+        userAnswers = Array(quizQuestions.length).fill(null);
+        currentQuestionIndex = 0;
+
+        // Reset UI
+        resultsContainer.classList.add("hidden");
+        quizContainer.classList.remove("hidden");
+
+        // Reinitialize quiz
+        initQuiz();
+      });
+
+      // Initialize the quiz
+      initQuiz();
+    </script>
+  </body>
+</html>
