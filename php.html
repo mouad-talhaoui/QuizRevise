@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz PHP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen py-8">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-indigo-800 mb-2">Quiz PHP</h1>
+            <p class="text-lg text-gray-600">Testez vos connaissances en PHP</p>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container" class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <!-- Progress Bar -->
+            <div class="mb-6">
+                <div class="flex justify-between mb-2">
+                    <span class="text-sm font-medium text-indigo-700">Progression</span>
+                    <span id="progress-text" class="text-sm font-medium text-indigo-700">Question 1/5</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 20%"></div>
+                </div>
+            </div>
+
+            <!-- Question Container -->
+            <div id="question-container" class="mb-8">
+                <!-- Question will be dynamically inserted here -->
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between">
+                <button id="prev-btn" class="flex items-center justify-center px-5 py-2 text-sm text-indigo-700 transition-colors duration-150 bg-indigo-100 rounded-lg hover:bg-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fas fa-arrow-left mr-2"></i> Précédent
+                </button>
+                <button id="next-btn" class="flex items-center justify-center px-5 py-2 text-sm text-white transition-colors duration-150 bg-indigo-600 rounded-lg hover:bg-indigo-700">
+                    Suivant <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+                <button id="results-btn" class="hidden flex items-center justify-center px-5 py-2 text-sm text-white transition-colors duration-150 bg-green-600 rounded-lg hover:bg-green-700">
+                    Voir les résultats <i class="fas fa-chart-bar ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Container -->
+        <div id="results-container" class="hidden bg-white rounded-xl shadow-lg p-6">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-indigo-800 mb-2">Résultats du Quiz</h2>
+                <div class="inline-flex items-center px-4 py-2 bg-indigo-100 text-indigo-800 rounded-full">
+                    <i class="fas fa-trophy mr-2"></i>
+                    <span id="score-text" class="font-bold">Score: 0/5</span>
+                </div>
+            </div>
+            
+            <div id="results-list" class="space-y-4">
+                <!-- Results will be dynamically inserted here -->
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button id="restart-btn" class="px-6 py-3 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-150">
+                    <i class="fas fa-redo mr-2"></i>Recommencer le Quiz
+                </button>
+            </div>
+
+            <div class="mt-8 text-center">
+                <a id="restart-btn" href="index.html" class="px-6 py-3 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-150">
+                    <i class="fas fa-redo mr-2"></i>Revenir à la page principale
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz questions data
+        const quizQuestions = [
+            {
+                id: 1,
+                type: "vrai-faux",
+                question: "PHP est un langage de programmation côté client.",
+                correctAnswer: "faux",
+                explanation: "PHP est un langage de programmation côté serveur, exécuté sur le serveur avant d'envoyer la page au navigateur."
+            },
+            {
+                id: 2,
+                type: "multichoix",
+                question: "Quelle est la bonne façon de terminer une instruction PHP?",
+                options: [
+                    "&lt;/php&gt;",
+                    "&lt;?&gt;",
+                    ";",
+                    "."
+                ],
+                correctAnswer: 2,
+                explanation: "En PHP, toutes les instructions doivent se terminer par un point-virgule (;)."
+            },
+            {
+                id: 3,
+                type: "vrai-faux",
+                question: "Les variables en PHP sont sensibles à la casse.",
+                correctAnswer: "vrai",
+                explanation: "En PHP, les noms de variables sont sensibles à la casse. $MaVariable et $mavariable sont deux variables différentes."
+            },
+            {
+                id: 4,
+                type: "multichoix",
+                question: "Quelle fonction PHP permet de vérifier le type d'une variable?",
+                options: [
+                    "gettype()",
+                    "var_type()",
+                    "type()",
+                    "typeof()"
+                ],
+                correctAnswer: 0,
+                explanation: "La fonction gettype() renvoie le type d'une variable. Exemple: gettype($var) peut renvoyer 'string', 'integer', etc."
+            },
+            {
+                id: 5,
+                type: "multichoix",
+                question: "Quel opérateur est utilisé pour concaténer des chaînes en PHP?",
+                options: [
+                    "+",
+                    "&",
+                    ".",
+                    "||"
+                ],
+                correctAnswer: 2,
+                explanation: "En PHP, l'opérateur de concaténation est le point (.). Exemple: $nom = 'Jean' . ' ' . 'Dupont';"
+            }
+        ];
+
+        // DOM Elements
+        const questionContainer = document.getElementById('question-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultsBtn = document.getElementById('results-btn');
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const scoreText = document.getElementById('score-text');
+        const resultsList = document.getElementById('results-list');
+        const restartBtn = document.getElementById('restart-btn');
+
+        // Quiz state
+        let currentQuestionIndex = 0;
+        let userAnswers = JSON.parse(localStorage.getItem('phpQuizAnswers')) || Array(quizQuestions.length).fill(null);
+
+        // Initialize the quiz
+        function initQuiz() {
+            displayQuestion(currentQuestionIndex);
+            updateProgress();
+            updateNavigationButtons();
+        }
+
+        // Display current question
+        function displayQuestion(index) {
+            const question = quizQuestions[index];
+            let questionHTML = '';
+
+            if (question.type === 'vrai-faux') {
+                questionHTML = `
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">${question.question}</h3>
+                        <div class="flex space-x-4">
+                            <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-150 flex-1 ${userAnswers[index] === 'vrai' ? 'border-indigo-500 bg-indigo-50' : ''}">
+                                <input type="radio" name="answer" value="vrai" class="hidden" ${userAnswers[index] === 'vrai' ? 'checked' : ''}>
+                                <div class="flex items-center justify-center w-6 h-6 border-2 border-gray-300 rounded-full mr-3 ${userAnswers[index] === 'vrai' ? 'border-indigo-500 bg-indigo-500' : ''}">
+                                    ${userAnswers[index] === 'vrai' ? '<i class="fas fa-check text-white text-xs"></i>' : ''}
+                                </div>
+                                <span class="text-lg">Vrai</span>
+                            </label>
+                            <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-150 flex-1 ${userAnswers[index] === 'faux' ? 'border-indigo-500 bg-indigo-50' : ''}">
+                                <input type="radio" name="answer" value="faux" class="hidden" ${userAnswers[index] === 'faux' ? 'checked' : ''}>
+                                <div class="flex items-center justify-center w-6 h-6 border-2 border-gray-300 rounded-full mr-3 ${userAnswers[index] === 'faux' ? 'border-indigo-500 bg-indigo-500' : ''}">
+                                    ${userAnswers[index] === 'faux' ? '<i class="fas fa-check text-white text-xs"></i>' : ''}
+                                </div>
+                                <span class="text-lg">Faux</span>
+                            </label>
+                        </div>
+                    </div>
+                `;
+            } else if (question.type === 'multichoix') {
+                questionHTML = `
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">${question.question}</h3>
+                        <div class="space-y-3">
+                            ${question.options.map((option, i) => `
+                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-150 ${userAnswers[index] === i ? 'border-indigo-500 bg-indigo-50' : ''}">
+                                    <input type="radio" name="answer" value="${i}" class="hidden" ${userAnswers[index] === i ? 'checked' : ''}>
+                                    <div class="flex items-center justify-center w-6 h-6 border-2 border-gray-300 rounded-full mr-3 ${userAnswers[index] === i ? 'border-indigo-500 bg-indigo-500' : ''}">
+                                        ${userAnswers[index] === i ? '<i class="fas fa-check text-white text-xs"></i>' : ''}
+                                    </div>
+                                    <span class="text-lg">${option}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            questionContainer.innerHTML = questionHTML;
+
+            // Add event listeners to answer options
+            const answerOptions = questionContainer.querySelectorAll('label');
+            answerOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    // Remove selection from all options
+                    answerOptions.forEach(opt => {
+                        opt.classList.remove('border-indigo-500', 'bg-indigo-50');
+                        const radio = opt.querySelector('input[type="radio"]');
+                        const checkIcon = opt.querySelector('.fa-check');
+                        if (checkIcon) {
+                            checkIcon.parentElement.classList.remove('border-indigo-500', 'bg-indigo-500');
+                            checkIcon.remove();
+                        }
+                    });
+
+                    // Select clicked option
+                    option.classList.add('border-indigo-500', 'bg-indigo-50');
+                    const radio = option.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                    
+                    const checkDiv = option.querySelector('div');
+                    checkDiv.classList.add('border-indigo-500', 'bg-indigo-500');
+                    checkDiv.innerHTML = '<i class="fas fa-check text-white text-xs"></i>';
+                    
+                    // Save answer
+                    saveAnswer(index, radio.value);
+                });
+            });
+        }
+
+        // Save answer to localStorage
+        function saveAnswer(index, answer) {
+            userAnswers[index] = answer;
+            localStorage.setItem('phpQuizAnswers', JSON.stringify(userAnswers));
+            updateNavigationButtons();
+        }
+
+        // Update progress bar and text
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `Question ${currentQuestionIndex + 1}/${quizQuestions.length}`;
+        }
+
+        // Update navigation buttons state
+        function updateNavigationButtons() {
+            prevBtn.disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === quizQuestions.length - 1) {
+                nextBtn.classList.add('hidden');
+                resultsBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                resultsBtn.classList.add('hidden');
+            }
+        }
+
+        // Show results
+        function showResults() {
+            let score = 0;
+            resultsList.innerHTML = '';
+
+            quizQuestions.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                let isCorrect = false;
+                
+                if (question.type === 'vrai-faux') {
+                    isCorrect = userAnswer === question.correctAnswer;
+                } else if (question.type === 'multichoix') {
+                    isCorrect = parseInt(userAnswer) === question.correctAnswer;
+                }
+                
+                if (isCorrect) score++;
+                
+                const resultItem = document.createElement('div');
+                resultItem.className = `p-4 rounded-lg border ${isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`;
+                
+                let userAnswerText = '';
+                if (question.type === 'vrai-faux') {
+                    userAnswerText = userAnswer || 'Non répondu';
+                } else if (question.type === 'multichoix') {
+                    userAnswerText = userAnswer !== null ? question.options[userAnswer] : 'Non répondu';
+                }
+                
+                resultItem.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1 mr-3">
+                            <i class="fas ${isCorrect ? 'fa-check-circle text-green-500' : 'fa-times-circle text-red-500'}"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800">${question.question}</h4>
+                            <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <div class="${isCorrect ? 'text-green-700' : 'text-red-700'}">
+                                    <span class="font-medium">Votre réponse:</span> ${userAnswerText}
+                                </div>
+                                ${!isCorrect ? `
+                                    <div class="text-green-700">
+                                        <span class="font-medium">Bonne réponse:</span> 
+                                        ${question.type === 'vrai-faux' ? question.correctAnswer : question.options[question.correctAnswer]}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="mt-2 text-gray-600 text-sm">
+                                <i class="fas fa-info-circle mr-1"></i> ${question.explanation}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                resultsList.appendChild(resultItem);
+            });
+            
+            scoreText.textContent = `Score: ${score}/${quizQuestions.length}`;
+            quizContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+        }
+
+        // Event Listeners
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion(currentQuestionIndex);
+                updateProgress();
+                updateNavigationButtons();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion(currentQuestionIndex);
+                updateProgress();
+                updateNavigationButtons();
+            }
+        });
+
+        resultsBtn.addEventListener('click', showResults);
+
+        restartBtn.addEventListener('click', () => {
+            // Clear saved answers
+            localStorage.removeItem('phpQuizAnswers');
+            userAnswers = Array(quizQuestions.length).fill(null);
+            currentQuestionIndex = 0;
+            
+            // Reset UI
+            resultsContainer.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            
+            // Reinitialize quiz
+            initQuiz();
+        });
+
+        // Initialize the quiz
+        initQuiz();
+    </script>
+</body>
+</html>
