@@ -21,7 +21,7 @@
             <div class="mb-6">
                 <div class="flex justify-between mb-2">
                     <span class="text-sm font-medium text-indigo-700">Progression</span>
-                    <span id="progress-text" class="text-sm font-medium text-indigo-700">Question 1/5</span>
+                    <span id="progress-text" class="text-sm font-medium text-indigo-700"></span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2.5">
                     <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 20%"></div>
@@ -53,7 +53,7 @@
                 <h2 class="text-2xl font-bold text-indigo-800 mb-2">Résultats du Quiz</h2>
                 <div class="inline-flex items-center px-4 py-2 bg-indigo-100 text-indigo-800 rounded-full">
                     <i class="fas fa-trophy mr-2"></i>
-                    <span id="score-text" class="font-bold">Score: 0/5</span>
+                    <span id="score-text" class="font-bold">Score: 0/quizQuestions.length</span>
                 </div>
             </div>
             
@@ -130,8 +130,128 @@
                 ],
                 correctAnswer: 2,
                 explanation: "En PHP, l'opérateur de concaténation est le point (.). Exemple: $nom = 'Jean' . ' ' . 'Dupont';"
+            },
+            {
+                id: 6,
+                type: "multichoix",
+                question: "Quel opérateur est utilisé pour concaténer des chaînes en PHP?",
+                options: [
+                    "+",
+                    "&",
+                    ".",
+                    "||"
+                ],
+                correctAnswer: 2,
+                explanation: "En PHP, l'opérateur de concaténation est le point (.). Exemple: $nom = 'Jean' . ' ' . 'Dupont';"
+            },
+            {
+                id: 7,
+                type: "multichoix",
+                question: "Quel opérateur est utilisé pour concaténer des chaînes en PHP?",
+                options: [
+                    "+",
+                    "&",
+                    ".",
+                    "||"
+                ],
+                correctAnswer: 2,
+                explanation: "En PHP, l'opérateur de concaténation est le point (.). Exemple: $nom = 'Jean' . ' ' . 'Dupont';"
+            },
+            {
+                id: 8,
+                type: "multichoix",
+                question: "Quel opérateur est utilisé pour concaténer des chaînes en PHP?",
+                options: [
+                    "+",
+                    "&",
+                    ".",
+                    "||"
+                ],
+                correctAnswer: 2,
+                explanation: "En PHP, l'opérateur de concaténation est le point (.). Exemple: $nom = 'Jean' . ' ' . 'Dupont';"
+            },
+            {
+                id: 9,
+                type: "multichoix",
+                question: "Quel opérateur est utilisé pour concaténer des chaînes en PHP?",
+                options: [
+                    "+",
+                    "&",
+                    ".",
+                    "||"
+                ],
+                correctAnswer: 2,
+                explanation: "En PHP, l'opérateur de concaténation est le point (.). Exemple: $nom = 'Jean' . ' ' . 'Dupont';"
+            },
+            {
+                id: 10,
+                type: "multichoix",
+                question: "Quel opérateur est utilisé pour concaténer des chaînes en PHP?",
+                options: [
+                    "+",
+                    "&",
+                    ".",
+                    "||"
+                ],
+                correctAnswer: 2,
+                explanation: "En PHP, l'opérateur de concaténation est le point (.). Exemple: $nom = 'Jean' . ' ' . 'Dupont';"
+            },
+            {
+                id: 11,
+                type: "multichoix",
+                question: "Quel opérateur est utilisé pour concaténer des chaînes en PHP?",
+                options: [
+                    "+",
+                    "&",
+                    ".",
+                    "||"
+                ],
+                correctAnswer: 2,
+                explanation: "En PHP, l'opérateur de concaténation est le point (.). Exemple: $nom = 'Jean' . ' ' . 'Dupont';"
+            },
+            {
+                id: 12,
+                type: "multichoix",
+                question: "Quel opérateur est utilisé pour concaténer des chaînes en PHP?",
+                options: [
+                    "+",
+                    "&",
+                    ".",
+                    "||"
+                ],
+                correctAnswer: 2,
+                explanation: "En PHP, l'opérateur de concaténation est le point (.). Exemple: $nom = 'Jean' . ' ' . 'Dupont';"
+            },
+            {
+                id: 13,
+                type: "multichoix",
+                question: "Quel opérateur est utilisé pour concaténer des chaînes en PHP?",
+                options: [
+                    "+",
+                    "&",
+                    ".",
+                    "||"
+                ],
+                correctAnswer: 2,
+                explanation: "En PHP, l'opérateur de concaténation est le point (.). Exemple: $nom = 'Jean' . ' ' . 'Dupont';"
+            },
+            {
+                id: 14,
+                type: "multichoix",
+                question: "Quel opérateur est utilisé pour concaténer des chaînes en PHP?",
+                options: [
+                    "+",
+                    "&",
+                    ".",
+                    "||"
+                ],
+                correctAnswer: 2,
+                explanation: "En PHP, l'opérateur de concaténation est le point (.). Exemple: $nom = 'Jean' . ' ' . 'Dupont';"
             }
         ];
+
+         
+        document.getElementById("progress-text").textContent = "Question 1/"+quizQuestions.length;
 
         // DOM Elements
         const questionContainer = document.getElementById('question-container');
@@ -298,7 +418,7 @@
                             <h4 class="font-semibold text-gray-800">${question.question}</h4>
                             <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
                                 <div class="${isCorrect ? 'text-green-700' : 'text-red-700'}">
-                                    <span class="font-medium">Votre réponse:</span> ${userAnswerText}
+                                    <span class="font-medium">Votre réponse:</span> ${!userAnswerText? "vous n'avez pas répondu" : userAnswerText}
                                 </div>
                                 ${!isCorrect ? `
                                     <div class="text-green-700">

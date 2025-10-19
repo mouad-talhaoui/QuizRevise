@@ -130,8 +130,23 @@
                 ],
                 correctAnswer: 2,
                 explanation: "Le modificateur 'public' permet d'accéder au membre depuis n'importe quelle classe, quel que soit le package."
+            },
+            {
+                id: 6,
+                type: "multichoix",
+                question: "Quel modificateur permet d'accéder à un membre depuis n'importe quelle classe?",
+                options: [
+                    "private",
+                    "protected",
+                    "public",
+                    "default (pas de modificateur)"
+                ],
+                correctAnswer: 2,
+                explanation: "Le modificateur 'public' permet d'accéder au membre depuis n'importe quelle classe, quel que soit le package."
             }
         ];
+
+                document.getElementById("progress-text").textContent = "Question 1/"+quizQuestions.length;
 
         // DOM Elements
         const questionContainer = document.getElementById('question-container');
@@ -298,7 +313,7 @@
                             <h4 class="font-semibold text-gray-800">${question.question}</h4>
                             <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
                                 <div class="${isCorrect ? 'text-green-700' : 'text-red-700'}">
-                                    <span class="font-medium">Votre réponse:</span> ${userAnswerText}
+                                    <span class="font-medium">Votre réponse:</span>  ${!userAnswerText? "vous n'avez pas répondu" : userAnswerText}
                                 </div>
                                 ${!isCorrect ? `
                                     <div class="text-green-700">
