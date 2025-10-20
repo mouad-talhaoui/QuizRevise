@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz android</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen py-8">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-indigo-800 mb-2">Quiz android</h1>
+            <p class="text-lg text-gray-600">Testez vos connaissances en android</p>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container" class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <!-- Progress Bar -->
+            <div class="mb-6">
+                <div class="flex justify-between mb-2">
+                    <span class="text-sm font-medium text-indigo-700">Progression</span>
+                    <span id="progress-text" class="text-sm font-medium text-indigo-700">Question 1/5</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 20%"></div>
+                </div>
+            </div>
+
+            <!-- Question Container -->
+            <div id="question-container" class="mb-8">
+                <!-- Question will be dynamically inserted here -->
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between">
+                <button id="prev-btn" class="flex items-center justify-center px-5 py-2 text-sm text-indigo-700 transition-colors duration-150 bg-indigo-100 rounded-lg hover:bg-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fas fa-arrow-left mr-2"></i> Précédent
+                </button>
+                <button id="next-btn" class="flex items-center justify-center px-5 py-2 text-sm text-white transition-colors duration-150 bg-indigo-600 rounded-lg hover:bg-indigo-700">
+                    Suivant <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+                <button id="results-btn" class="hidden flex items-center justify-center px-5 py-2 text-sm text-white transition-colors duration-150 bg-green-600 rounded-lg hover:bg-green-700">
+                    Voir les résultats <i class="fas fa-chart-bar ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Container -->
+        <div id="results-container" class="hidden bg-white rounded-xl shadow-lg p-6">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-indigo-800 mb-2">Résultats du Quiz</h2>
+                <div class="inline-flex items-center px-4 py-2 bg-indigo-100 text-indigo-800 rounded-full">
+                    <i class="fas fa-trophy mr-2"></i>
+                    <span id="score-text" class="font-bold">Score: 0/5</span>
+                </div>
+            </div>
+            
+            <div id="results-list" class="space-y-4">
+                <!-- Results will be dynamically inserted here -->
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button id="restart-btn" class="px-6 py-3 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-150">
+                    <i class="fas fa-redo mr-2"></i>Recommencer le Quiz
+                </button>
+            </div>
+
+            <div class="mt-8 text-center">
+                <a id="restart-btn" href="index.html" class="px-6 py-3 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-150">
+                    <i class="fas fa-redo mr-2"></i>Revenir à la page principale
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        localStorage.clear();
+        // Quiz questions data
+        const quizQuestions = [
+    {
+        "id": 1,
+        "type": "multichoix",
+        "question": "Quelle est la principale caractéristique de Kotlin par rapport à Java pour Android?",
+        "options": [
+            "Plus verbeux",
+            "100% interopérable avec Java",
+            "Moins expressif",
+            "Nécessite plus de code"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Kotlin est 100% interopérable avec Java, permettant d'utiliser les bibliothèques Java existantes."
+    },
+    {
+        "id": 2,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on une variable non nullable en Kotlin?",
+        "options": [
+            "var name: String",
+            "var name: String!",
+            "var name: String?",
+            "var name: String!!"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Le type seul (String) déclare une variable non nullable. String? pour nullable."
+    },
+    {
+        "id": 3,
+        "type": "multichoix",
+        "question": "Quel mot-clé déclare une variable immuable (read-only)?",
+        "options": [
+            "val",
+            "var",
+            "const",
+            "final"
+        ],
+        "correctAnswer": 0,
+        "explanation": "val déclare une variable immuable, var une variable mutable."
+    },
+    {
+        "id": 4,
+        "type": "multichoix",
+        "question": "Comment gère-t-on les nulls en Kotlin?",
+        "options": [
+            "NullPointerException",
+            "Opérateur de safe call (?.)",
+            "Annotations @Nullable",
+            "Blocs try-catch"
+        ],
+        "correctAnswer": 1,
+        "explanation": "L'opérateur de safe call ?. permet d'appeler des méthodes sur des objets potentiellement nulls."
+    },
+    {
+        "id": 5,
+        "type": "multichoix",
+        "question": "Quelle fonction étendue convertit un type nullable en non nullable?",
+        "options": [
+            "orEmpty()",
+            "!!",
+            "?.",
+            "let"
+        ],
+        "correctAnswer": 1,
+        "explanation": "L'opérateur !! convertit un nullable en non nullable (peut causer NullPointerException)."
+    },
+    {
+        "id": 6,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on une fonction en Kotlin?",
+        "options": [
+            "function funName() {}",
+            "def funName() {}",
+            "fun funName() {}",
+            "void funName() {}"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Le mot-clé 'fun' est utilisé pour déclarer des fonctions en Kotlin."
+    },
+    {
+        "id": 7,
+        "type": "multichoix",
+        "question": "Qu'est-ce qu'une data class en Kotlin?",
+        "options": [
+            "Une classe pour les bases de données",
+            "Une classe qui génère automatiquement equals(), hashCode(), toString()",
+            "Une classe abstraite",
+            "Une classe pour les données JSON"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Les data classes génèrent automatiquement les méthodes equals(), hashCode(), toString(), copy() et componentN()."
+    },
+    {
+        "id": 8,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on une data class?",
+        "options": [
+            "class Data User",
+            "data class User",
+            "data User class",
+            "class User data"
+        ],
+        "correctAnswer": 1,
+        "explanation": "data class User(val name: String, val age: Int)"
+    },
+    {
+        "id": 9,
+        "type": "multichoix",
+        "question": "Quel mot-clé permet l'héritage de classe en Kotlin?",
+        "options": [
+            "extends",
+            "inherits",
+            ":",
+            "implements"
+        ],
+        "correctAnswer": 2,
+        "explanation": "L'héritage se fait avec le symbole ':' : class Child : Parent()"
+    },
+    {
+        "id": 10,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on une classe ouverte à l'héritage?",
+        "options": [
+            "open class",
+            "abstract class",
+            "public class",
+            "inheritable class"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Par défaut les classes sont finales en Kotlin. 'open' les rend héritables."
+    },
+    {
+        "id": 11,
+        "type": "multichoix",
+        "question": "Quelle est la différence entre == et === en Kotlin?",
+        "options": [
+            "== compare les références, === compare les valeurs",
+            "== compare les valeurs, === compare les références",
+            "Aucune différence",
+            "=== est pour les nombres, == pour les chaînes"
+        ],
+        "correctAnswer": 1,
+        "explanation": "== appelle equals() (comparaison structurelle), === compare les références mémoire."
+    },
+    {
+        "id": 12,
+        "type": "multichoix",
+        "question": "Comment utilise-t-on le when expression?",
+        "options": [
+            "Comme un switch amélioré",
+            "Comme un if-else",
+            "Comme une boucle",
+            "Comme un opérateur ternaire"
+        ],
+        "correctAnswer": 0,
+        "explanation": "when est l'équivalent de switch mais plus puissant, avec support des ranges et types."
+    },
+    {
+        "id": 13,
+        "type": "multichoix",
+        "question": "Qu'est-ce qu'une extension function?",
+        "options": [
+            "Une fonction qui étend une classe sans l'hériter",
+            "Une fonction très longue",
+            "Une fonction externe",
+            "Une fonction de la bibliothèque standard"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Les extension functions permettent d'ajouter des méthodes à des classes existantes sans héritage."
+    },
+    {
+        "id": 14,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on une lambda en Kotlin?",
+        "options": [
+            "{ param -> corps }",
+            "lambda(param) { corps }",
+            "function(param) { corps }",
+            "(param) => corps"
+        ],
+        "correctAnswer": 0,
+        "explanation": "La syntaxe est { paramètres -> corps } ou { it } pour un seul paramètre."
+    },
+    {
+        "id": 15,
+        "type": "multichoix",
+        "question": "Quel mot-clé permet de créer un singleton?",
+        "options": [
+            "singleton",
+            "object",
+            "static",
+            "single"
+        ],
+        "correctAnswer": 1,
+        "explanation": "object déclare un singleton (une classe avec une seule instance)."
+    },
+    {
+        "id": 16,
+        "type": "multichoix",
+        "question": "Comment gère-t-on les exceptions en Kotlin?",
+        "options": [
+            "try-catch-finally",
+            "try-except",
+            "catch-throw",
+            "error-handle"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Kotlin utilise try-catch-finally comme Java, mais les exceptions ne sont pas checked."
+    },
+    {
+        "id": 17,
+        "type": "multichoix",
+        "question": "Qu'est-ce que la délégation en Kotlin?",
+        "options": [
+            "Déléguer l'implémentation à un autre objet",
+            "Une forme d'héritage",
+            "Un design pattern de création",
+            "Une manière de gérer les threads"
+        ],
+        "correctAnswer": 0,
+        "explanation": "La délégation permet de déléguer l'implémentation d'une interface à un autre objet avec le mot-clé 'by'."
+    },
+    {
+        "id": 18,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on un coroutine scope dans Android?",
+        "options": [
+            "lifecycleScope",
+            "coroutineScope",
+            "asyncScope",
+            "androidScope"
+        ],
+        "correctAnswer": 0,
+        "explanation": "lifecycleScope est fourni par AndroidX pour les coroutines liées au lifecycle."
+    },
+    {
+        "id": 19,
+        "type": "multichoix",
+        "question": "Quelle fonction lance une coroutine?",
+        "options": [
+            "launch",
+            "async",
+            "run",
+            "Les deux premières réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "launch pour le fire-and-forget, async pour les opérations avec résultat."
+    },
+    {
+        "id": 20,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on un suspend function?",
+        "options": [
+            "suspend fun",
+            "async fun",
+            "coroutine fun",
+            "background fun"
+        ],
+        "correctAnswer": 0,
+        "explanation": "suspend fun déclare une fonction qui peut être suspendue dans une coroutine."
+    },
+    {
+        "id": 21,
+        "type": "multichoix",
+        "question": "Quel dispatcher utilise-t-on pour le UI thread en Android?",
+        "options": [
+            "Dispatchers.IO",
+            "Dispatchers.Main",
+            "Dispatchers.Default",
+            "Dispatchers.UI"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Dispatchers.Main pour les opérations UI, Dispatchers.IO pour les I/O, Dispatchers.Default pour le CPU."
+    },
+    {
+        "id": 22,
+        "type": "multichoix",
+        "question": "Comment observe-t-on un LiveData dans un Fragment?",
+        "options": [
+            "viewLifecycleOwner.liveData.observe()",
+            "fragment.observe(liveData)",
+            "liveData.observe(viewLifecycleOwner)",
+            "observeLiveData(liveData)"
+        ],
+        "correctAnswer": 2,
+        "explanation": "liveData.observe(lifecycleOwner) { value -> ... } avec viewLifecycleOwner dans les fragments."
+    },
+    {
+        "id": 23,
+        "type": "multichoix",
+        "question": "Qu'est-ce qu'un ViewModel en Android?",
+        "options": [
+            "Un composant pour la logique métier liée à l'UI",
+            "Une vue personnalisée",
+            "Un modèle de base de données",
+            "Un type de layout"
+        ],
+        "correctAnswer": 0,
+        "explanation": "ViewModel conserve les données liées à l'UI pendant les changements de configuration."
+    },
+    {
+        "id": 24,
+        "type": "multichoix",
+        "question": "Comment crée-t-on un ViewModel dans un Fragment?",
+        "options": [
+            "ViewModelProvider(this).get(MyViewModel::class.java)",
+            "new MyViewModel()",
+            "ViewModel.create()",
+            "getViewModel(MyViewModel::class)"
+        ],
+        "correctAnswer": 0,
+        "explanation": "ViewModelProvider permet de créer ou récupérer un ViewModel lié au lifecycle."
+    },
+    {
+        "id": 25,
+        "type": "multichoix",
+        "question": "Qu'est-ce que Data Binding en Android?",
+        "options": [
+            "Lier directement les données aux vues dans le XML",
+            "Lier des bases de données",
+            "Un type de service",
+            "Une méthode de sauvegarde"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Data Binding permet de lier les composants UI aux données dans le layout XML."
+    },
+    {
+        "id": 26,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on une variable dans un layout Data Binding?",
+        "options": [
+            "<variable name=\"user\" type=\"com.example.User\" />",
+            "<data var=\"user\" class=\"User\" />",
+            "<bind name=\"user\" type=\"User\" />",
+            "<model name=\"user\" type=\"User\" />"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Dans la balise <data>, on déclare des variables avec name et type."
+    },
+    {
+        "id": 27,
+        "type": "multichoix",
+        "question": "Quelle annotation crée un BindingAdapter personnalisé?",
+        "options": [
+            "@BindingAdapter",
+            "@CustomBinding",
+            "@DataBinding",
+            "@Bindable"
+        ],
+        "correctAnswer": 0,
+        "explanation": "@BindingAdapter permet de créer des adaptateurs personnalisés pour Data Binding."
+    },
+    {
+        "id": 28,
+        "type": "multichoix",
+        "question": "Comment navigue-t-on entre fragments avec le Navigation Component?",
+        "options": [
+            "findNavController().navigate(R.id.action)",
+            "Navigation.goTo(fragment)",
+            "FragmentManager.navigate()",
+            "startFragment(fragment)"
+        ],
+        "correctAnswer": 0,
+        "explanation": "findNavController().navigate() permet de naviguer vers une destination définie dans le graphe de navigation."
+    },
+    {
+        "id": 29,
+        "type": "multichoix",
+        "question": "Qu'est-ce qu'un Sealed Class en Kotlin?",
+        "options": [
+            "Une classe avec un nombre limité de sous-classes",
+            "Une classe cryptée",
+            "Une classe privée",
+            "Une classe de base de données"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Les sealed classes restreignent l'héritage à un ensemble connu de sous-classes."
+    },
+    {
+        "id": 30,
+        "type": "multichoix",
+        "question": "Comment utilise-t-on les Sealed Classes avec when?",
+        "options": [
+            "Sans besoin de else branch",
+            "Avec else branch obligatoire",
+            "Comme des enum",
+            "Avec des interfaces"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Avec les sealed classes, when est exhaustif et ne nécessite pas de else branch."
+    },
+    {
+        "id": 31,
+        "type": "multichoix",
+        "question": "Quelle est la différence entre const et val?",
+        "options": [
+            "const est pour les collections, val pour les primitifs",
+            "const est connu à la compilation, val à l'exécution",
+            "val est plus rapide que const",
+            "Aucune différence"
+        ],
+        "correctAnswer": 1,
+        "explanation": "const doit être connu à la compilation (primitifs/String), val peut être calculé à l'exécution."
+    },
+    {
+        "id": 32,
+        "type": "multichoix",
+        "question": "Comment utilise-t-on les higher-order functions?",
+        "options": [
+            "Fonctions qui prennent d'autres fonctions en paramètres",
+            "Fonctions de haut niveau",
+            "Fonctions dans des classes",
+            "Fonctions asynchrones"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Les higher-order functions prennent des fonctions en paramètres ou retournent des fonctions."
+    },
+    {
+        "id": 33,
+        "type": "multichoix",
+        "question": "Qu'est-ce que le scope function let?",
+        "options": [
+            "Exécute un bloc sur un objet non null",
+            "Crée un nouveau scope",
+            "Déclare une variable",
+            "Gère les exceptions"
+        ],
+        "correctAnswer": 0,
+        "explanation": "let exécute un bloc de code sur un objet non null et retourne le résultat du bloc."
+    },
+    {
+        "id": 34,
+        "type": "multichoix",
+        "question": "Quelle scope function retourne l'objet contexte?",
+        "options": [
+            "let",
+            "run",
+            "also",
+            "apply"
+        ],
+        "correctAnswer": 3,
+        "explanation": "apply retourne l'objet contexte lui-même, utile pour l'initialisation."
+    },
+    {
+        "id": 35,
+        "type": "multichoix",
+        "question": "Comment utilise-t-on with?",
+        "options": [
+            "with(obj) { ... }",
+            "obj.with { ... }",
+            "with { obj ... }",
+            "use with(obj)"
+        ],
+        "correctAnswer": 0,
+        "explanation": "with(obj) { ... } permet d'accéder aux membres de obj sans le qualifier dans le bloc."
+    },
+    {
+        "id": 36,
+        "type": "multichoix",
+        "question": "Qu'est-ce que Flow en Kotlin?",
+        "options": [
+            "Un stream asynchrone de données",
+            "Un type de collection",
+            "Un design pattern",
+            "Une méthode de navigation"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Flow est un stream asynchrone qui peut émettre plusieurs valeurs au fil du temps."
+    },
+    {
+        "id": 37,
+        "type": "multichoix",
+        "question": "Comment collecte-t-on un Flow dans une coroutine?",
+        "options": [
+            "flow.collect()",
+            "flow.observe()",
+            "flow.subscribe()",
+            "flow.listen()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "flow.collect { value -> ... } dans une coroutine pour recevoir les valeurs."
+    },
+    {
+        "id": 38,
+        "type": "multichoix",
+        "question": "Quelle annotation crée un Dependency Injection avec Hilt?",
+        "options": [
+            "@Inject",
+            "@Provide",
+            "@Module",
+            "@Hilt"
+        ],
+        "correctAnswer": 0,
+        "explanation": "@Inject sur le constructeur pour demander une dépendance, @Inject sur le champ pour l'injection."
+    },
+    {
+        "id": 39,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on un module Hilt?",
+        "options": [
+            "@Module",
+            "@HiltModule",
+            "@ProvidesModule",
+            "@DependencyModule"
+        ],
+        "correctAnswer": 0,
+        "explanation": "@Module avec @InstallIn pour déclarer un module de fourniture de dépendances."
+    },
+    {
+        "id": 40,
+        "type": "multichoix",
+        "question": "Quelle annotation rend une Application Hilt-compatible?",
+        "options": [
+            "@HiltAndroidApp",
+            "@HiltApp",
+            "@AndroidHilt",
+            "@HiltApplication"
+        ],
+        "correctAnswer": 0,
+        "explanation": "@HiltAndroidApp sur la classe Application pour initialiser Hilt."
+    },
+    {
+        "id": 41,
+        "type": "multichoix",
+        "question": "Comment injecte-t-on dans un Activity avec Hilt?",
+        "options": [
+            "@AndroidEntryPoint",
+            "@HiltActivity",
+            "@InjectActivity",
+            "@EntryPoint"
+        ],
+        "correctAnswer": 0,
+        "explanation": "@AndroidEntryPoint sur l'Activity pour permettre l'injection de dépendances."
+    },
+    {
+        "id": 42,
+        "type": "multichoix",
+        "question": "Qu'est-ce que Room en Android?",
+        "options": [
+            "Une bibliothèque de persistance SQLite",
+            "Un type de layout",
+            "Un design pattern",
+            "Une salle de conférence virtuelle"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Room est une couche d'abstraction au-dessus de SQLite avec vérification à la compilation."
+    },
+    {
+        "id": 43,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on une Entity Room?",
+        "options": [
+            "@Entity",
+            "@Table",
+            "@RoomEntity",
+            "@DatabaseEntity"
+        ],
+        "correctAnswer": 0,
+        "explanation": "@Entity sur une data class pour la mapper à une table de base de données."
+    },
+    {
+        "id": 44,
+        "type": "multichoix",
+        "question": "Quelle annotation crée un DAO Room?",
+        "options": [
+            "@Dao",
+            "@DatabaseAccess",
+            "@RoomDao",
+            "@AccessObject"
+        ],
+        "correctAnswer": 0,
+        "explanation": "@Dao sur une interface pour définir les méthodes d'accès aux données."
+    },
+    {
+        "id": 45,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on une requête Room?",
+        "options": [
+            "@Query(\"SELECT * FROM table\")",
+            "@Select(\"SELECT * FROM table\")",
+            "@RoomQuery(\"SELECT * FROM table\")",
+            "@Sql(\"SELECT * FROM table\")"
+        ],
+        "correctAnswer": 0,
+        "explanation": "@Query avec la requête SQL dans une chaîne."
+    },
+    {
+        "id": 46,
+        "type": "multichoix",
+        "question": "Qu'est-ce que WorkManager?",
+        "options": [
+            "Pour les tâches background différées et garanties",
+            "Pour le management des threads",
+            "Pour la gestion de la mémoire",
+            "Pour l'optimisation des performances"
+        ],
+        "correctAnswer": 0,
+        "explanation": "WorkManager gère les tâches background qui doivent s'exécuter même si l'app est tuée."
+    },
+    {
+        "id": 47,
+        "type": "multichoix",
+        "question": "Comment crée-t-on un Worker?",
+        "options": [
+            "class MyWorker : Worker()",
+            "class MyWorker : BackgroundWorker()",
+            "class MyWorker : TaskWorker()",
+            "class MyWorker : JobWorker()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Étendre Worker et override doWork() pour définir la tâche."
+    },
+    {
+        "id": 48,
+        "type": "multichoix",
+        "question": "Quelle fonction utilise-t-on pour les requêtes réseau avec Retrofit?",
+        "options": [
+            "suspend fun",
+            "async fun",
+            "network fun",
+            "call fun"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Les fonctions suspend dans les interfaces Retrofit pour les appels réseau asynchrones."
+    },
+    {
+        "id": 49,
+        "type": "multichoix",
+        "question": "Comment déclare-t-on un endpoint Retrofit?",
+        "options": [
+            "@GET(\"users/{id}\")",
+            "@Endpoint(\"users/{id}\")",
+            "@Path(\"users/{id}\")",
+            "@Request(\"users/{id}\")"
+        ],
+        "correctAnswer": 0,
+        "explanation": "@GET, @POST, etc. avec le chemin de l'endpoint."
+    },
+    {
+        "id": 50,
+        "type": "multichoix",
+        "question": "Qu'est-ce que Compose en Android?",
+        "options": [
+            "Un toolkit de UI déclarative",
+            "Un compilateur Kotlin",
+            "Un système de build",
+            "Une bibliothèque de test"
+        ],
+        "explanation": "Jetpack Compose est un toolkit moderne de UI déclarative avec Kotlin."
+    },
+    {
+        "id": 51,
+        "type": "multichoix",
+        "question": "Comment crée-t-on un composant Composable?",
+        "options": [
+            "@Composable fun Component()",
+            "@Component fun Composable()",
+            "fun @Composable Component()",
+            "composable fun Component()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "@Composable fun NomComposant() { ... }"
+    },
+    {
+        "id": 52,
+        "type": "multichoix",
+        "question": "Quelle fonction crée un état mutable dans Compose?",
+        "options": [
+            "remember { mutableStateOf() }",
+            "mutableState()",
+            "state()",
+            "composableState()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "remember { mutableStateOf(valeur) } crée un état qui persiste les recompositions."
+    },
+    {
+        "id": 53,
+        "type": "multichoix",
+        "question": "Comment utilise-t-on ViewModel avec Compose?",
+        "options": [
+            "viewModel<MyViewModel>()",
+            "getViewModel<MyViewModel>()",
+            "ViewModel()",
+            "composeViewModel<MyViewModel>()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "viewModel() est une fonction qui récupère ou crée un ViewModel dans un composable."
+    },
+    {
+        "id": 54,
+        "type": "multichoix",
+        "question": "Qu'est-ce que les Modifiers dans Compose?",
+        "options": [
+            "Pour décorer et configurer les composants",
+            "Des annotations",
+            "Des fonctions de modification",
+            "Des design patterns"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Les Modifiers permettent de modifier l'apparence et le comportement des composables."
+    },
+    {
+        "id": 55,
+        "type": "multichoix",
+        "question": "Comment teste-t-on une fonction suspend?",
+        "options": [
+            "runTest { ... }",
+            "testSuspend { ... }",
+            "asyncTest { ... }",
+            "coroutineTest { ... }"
+        ],
+        "correctAnswer": 0,
+        "explanation": "runTest de kotlinx-coroutines-test pour tester les fonctions suspendues."
+    },
+    {
+        "id": 56,
+        "type": "multichoix",
+        "question": "Quelle annotation marque un test unitaire?",
+        "options": [
+            "@Test",
+            "@UnitTest",
+            "@AndroidTest",
+            "@JvmTest"
+        ],
+        "correctAnswer": 0,
+        "explanation": "@Test sur les fonctions de test, comme dans JUnit."
+    },
+    {
+        "id": 57,
+        "type": "multichoix",
+        "question": "Comment mocke-t-on une dépendance avec MockK?",
+        "options": [
+            "mockk<MyClass>()",
+            "Mock<MyClass>()",
+            "createMock<MyClass>()",
+            "newMock<MyClass>()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "mockk<MyClass>() crée un mock avec MockK."
+    },
+    {
+        "id": 58,
+        "type": "multichoix",
+        "question": "Qu'est-ce que le pattern Repository?",
+        "options": [
+            "Centraliser l'accès aux données",
+            "Un dépôt de code",
+            "Un design pattern de création",
+            "Une méthode de sauvegarde"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Le pattern Repository abstrait la source des données (API, base de données, cache)."
+    },
+    {
+        "id": 59,
+        "type": "multichoix",
+        "question": "Comment gère-t-on les configurations avec BuildSrc?",
+        "options": [
+            "Déclarer les dépendances dans buildSrc/",
+            "Dans le fichier local.properties",
+            "Avec des variables d'environnement",
+            "Dans le AndroidManifest"
+        ],
+        "correctAnswer": 0,
+        "explanation": "buildSrc/ permet de centraliser la configuration des builds et les dépendances."
+    },
+    {
+        "id": 60,
+        "type": "multichoix",
+        "question": "Quelle est la principale raison d'utiliser Kotlin pour Android?",
+        "options": [
+            "Plus concis et sûr que Java",
+            "Plus rapide à compiler",
+            "Nécessite moins de bibliothèques",
+            "Compatibilité avec Objective-C"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Kotlin est plus concis, avec une sécurité nulle intégrée et une interopérabilité totale avec Java."
+    }
+];
+
+                document.getElementById("progress-text").textContent = "Question 1/"+quizQuestions.length;
+
+        // DOM Elements
+        const questionContainer = document.getElementById('question-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultsBtn = document.getElementById('results-btn');
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const scoreText = document.getElementById('score-text');
+        const resultsList = document.getElementById('results-list');
+        const restartBtn = document.getElementById('restart-btn');
+
+        // Quiz state
+        let currentQuestionIndex = 0;
+        let userAnswers = JSON.parse(localStorage.getItem('javaQuizAnswers')) || Array(quizQuestions.length).fill(null);
+
+        // Initialize the quiz
+        function initQuiz() {
+            displayQuestion(currentQuestionIndex);
+            updateProgress();
+            updateNavigationButtons();
+        }
+
+        // Display current question
+        function displayQuestion(index) {
+            const question = quizQuestions[index];
+            let questionHTML = '';
+
+            if (question.type === 'vrai-faux') {
+                questionHTML = `
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">${question.question}</h3>
+                        <div class="flex space-x-4">
+                            <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-150 flex-1 ${userAnswers[index] === 'vrai' ? 'border-indigo-500 bg-indigo-50' : ''}">
+                                <input type="radio" name="answer" value="vrai" class="hidden" ${userAnswers[index] === 'vrai' ? 'checked' : ''}>
+                                <div class="flex items-center justify-center w-6 h-6 border-2 border-gray-300 rounded-full mr-3 ${userAnswers[index] === 'vrai' ? 'border-indigo-500 bg-indigo-500' : ''}">
+                                    ${userAnswers[index] === 'vrai' ? '<i class="fas fa-check text-white text-xs"></i>' : ''}
+                                </div>
+                                <span class="text-lg">Vrai</span>
+                            </label>
+                            <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-150 flex-1 ${userAnswers[index] === 'faux' ? 'border-indigo-500 bg-indigo-50' : ''}">
+                                <input type="radio" name="answer" value="faux" class="hidden" ${userAnswers[index] === 'faux' ? 'checked' : ''}>
+                                <div class="flex items-center justify-center w-6 h-6 border-2 border-gray-300 rounded-full mr-3 ${userAnswers[index] === 'faux' ? 'border-indigo-500 bg-indigo-500' : ''}">
+                                    ${userAnswers[index] === 'faux' ? '<i class="fas fa-check text-white text-xs"></i>' : ''}
+                                </div>
+                                <span class="text-lg">Faux</span>
+                            </label>
+                        </div>
+                    </div>
+                `;
+            } else if (question.type === 'multichoix') {
+                questionHTML = `
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">${question.question}</h3>
+                        <div class="space-y-3">
+                            ${question.options.map((option, i) => `
+                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-150 ${userAnswers[index] === i ? 'border-indigo-500 bg-indigo-50' : ''}">
+                                    <input type="radio" name="answer" value="${i}" class="hidden" ${userAnswers[index] === i ? 'checked' : ''}>
+                                    <div class="flex items-center justify-center w-6 h-6 border-2 border-gray-300 rounded-full mr-3 ${userAnswers[index] === i ? 'border-indigo-500 bg-indigo-500' : ''}">
+                                        ${userAnswers[index] === i ? '<i class="fas fa-check text-white text-xs"></i>' : ''}
+                                    </div>
+                                    <span class="text-lg">${option}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            questionContainer.innerHTML = questionHTML;
+
+            // Add event listeners to answer options
+            const answerOptions = questionContainer.querySelectorAll('label');
+            answerOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    // Remove selection from all options
+                    answerOptions.forEach(opt => {
+                        opt.classList.remove('border-indigo-500', 'bg-indigo-50');
+                        const radio = opt.querySelector('input[type="radio"]');
+                        const checkIcon = opt.querySelector('.fa-check');
+                        if (checkIcon) {
+                            checkIcon.parentElement.classList.remove('border-indigo-500', 'bg-indigo-500');
+                            checkIcon.remove();
+                        }
+                    });
+
+                    // Select clicked option
+                    option.classList.add('border-indigo-500', 'bg-indigo-50');
+                    const radio = option.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                    
+                    const checkDiv = option.querySelector('div');
+                    checkDiv.classList.add('border-indigo-500', 'bg-indigo-500');
+                    checkDiv.innerHTML = '<i class="fas fa-check text-white text-xs"></i>';
+                    
+                    // Save answer
+                    saveAnswer(index, radio.value);
+                });
+            });
+        }
+
+        // Save answer to localStorage
+        function saveAnswer(index, answer) {
+            userAnswers[index] = answer;
+            localStorage.setItem('javaQuizAnswers', JSON.stringify(userAnswers));
+            updateNavigationButtons();
+        }
+
+        // Update progress bar and text
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `Question ${currentQuestionIndex + 1}/${quizQuestions.length}`;
+        }
+
+        // Update navigation buttons state
+        function updateNavigationButtons() {
+            prevBtn.disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === quizQuestions.length - 1) {
+                nextBtn.classList.add('hidden');
+                resultsBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                resultsBtn.classList.add('hidden');
+            }
+        }
+
+        // Show results
+        function showResults() {
+            let score = 0;
+            resultsList.innerHTML = '';
+
+            quizQuestions.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                let isCorrect = false;
+                
+                if (question.type === 'vrai-faux') {
+                    isCorrect = userAnswer === question.correctAnswer;
+                } else if (question.type === 'multichoix') {
+                    isCorrect = parseInt(userAnswer) === question.correctAnswer;
+                }
+                
+                if (isCorrect) score++;
+                
+                const resultItem = document.createElement('div');
+                resultItem.className = `p-4 rounded-lg border ${isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`;
+                
+                let userAnswerText = '';
+                if (question.type === 'vrai-faux') {
+                    userAnswerText = userAnswer || 'Non répondu';
+                } else if (question.type === 'multichoix') {
+                    userAnswerText = userAnswer !== null ? question.options[userAnswer] : 'Non répondu';
+                }
+                
+                resultItem.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1 mr-3">
+                            <i class="fas ${isCorrect ? 'fa-check-circle text-green-500' : 'fa-times-circle text-red-500'}"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800">${question.question}</h4>
+                            <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <div class="${isCorrect ? 'text-green-700' : 'text-red-700'}">
+                                    <span class="font-medium">Votre réponse:</span>  ${!userAnswerText? "vous n'avez pas répondu" : userAnswerText}
+                                </div>
+                                ${!isCorrect ? `
+                                    <div class="text-green-700">
+                                        <span class="font-medium">Bonne réponse:</span> 
+                                        ${question.type === 'vrai-faux' ? question.correctAnswer : question.options[question.correctAnswer]}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="mt-2 text-gray-600 text-sm">
+                                <i class="fas fa-info-circle mr-1"></i> ${question.explanation}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                resultsList.appendChild(resultItem);
+            });
+            
+            scoreText.textContent = `Score: ${score}/${quizQuestions.length}`;
+            quizContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+        }
+
+        // Event Listeners
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion(currentQuestionIndex);
+                updateProgress();
+                updateNavigationButtons();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion(currentQuestionIndex);
+                updateProgress();
+                updateNavigationButtons();
+            }
+        });
+
+        resultsBtn.addEventListener('click', showResults);
+
+        restartBtn.addEventListener('click', () => {
+            // Clear saved answers
+            localStorage.removeItem('javaQuizAnswers');
+            userAnswers = Array(quizQuestions.length).fill(null);
+            currentQuestionIndex = 0;
+            
+            // Reset UI
+            resultsContainer.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            
+            // Reinitialize quiz
+            initQuiz();
+        });
+
+        // Initialize the quiz
+        initQuiz();
+    </script>
+</body>
+</html>

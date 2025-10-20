@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz sql</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen py-8">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-indigo-800 mb-2">Quiz Sql</h1>
+            <p class="text-lg text-gray-600">Testez vos connaissances en Sql</p>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container" class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <!-- Progress Bar -->
+            <div class="mb-6">
+                <div class="flex justify-between mb-2">
+                    <span class="text-sm font-medium text-indigo-700">Progression</span>
+                    <span id="progress-text" class="text-sm font-medium text-indigo-700">Question 1/5</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 20%"></div>
+                </div>
+            </div>
+
+            <!-- Question Container -->
+            <div id="question-container" class="mb-8">
+                <!-- Question will be dynamically inserted here -->
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between">
+                <button id="prev-btn" class="flex items-center justify-center px-5 py-2 text-sm text-indigo-700 transition-colors duration-150 bg-indigo-100 rounded-lg hover:bg-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fas fa-arrow-left mr-2"></i> Précédent
+                </button>
+                <button id="next-btn" class="flex items-center justify-center px-5 py-2 text-sm text-white transition-colors duration-150 bg-indigo-600 rounded-lg hover:bg-indigo-700">
+                    Suivant <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+                <button id="results-btn" class="hidden flex items-center justify-center px-5 py-2 text-sm text-white transition-colors duration-150 bg-green-600 rounded-lg hover:bg-green-700">
+                    Voir les résultats <i class="fas fa-chart-bar ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Container -->
+        <div id="results-container" class="hidden bg-white rounded-xl shadow-lg p-6">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-indigo-800 mb-2">Résultats du Quiz</h2>
+                <div class="inline-flex items-center px-4 py-2 bg-indigo-100 text-indigo-800 rounded-full">
+                    <i class="fas fa-trophy mr-2"></i>
+                    <span id="score-text" class="font-bold">Score: 0/5</span>
+                </div>
+            </div>
+            
+            <div id="results-list" class="space-y-4">
+                <!-- Results will be dynamically inserted here -->
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button id="restart-btn" class="px-6 py-3 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-150">
+                    <i class="fas fa-redo mr-2"></i>Recommencer le Quiz
+                </button>
+            </div>
+
+            <div class="mt-8 text-center">
+                <a id="restart-btn" href="index.html" class="px-6 py-3 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-150">
+                    <i class="fas fa-redo mr-2"></i>Revenir à la page principale
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        localStorage.clear();
+        // Quiz questions data
+        const quizQuestions = [
+    {
+        "id": 1,
+        "type": "multichoix",
+        "question": "Que signifie l'acronyme SQL?",
+        "options": [
+            "Structured Query Language",
+            "Simple Query Language",
+            "Standard Query Logic",
+            "System Query Language"
+        ],
+        "correctAnswer": 0,
+        "explanation": "SQL signifie Structured Query Language (Langage de Requête Structuré)."
+    },
+    {
+        "id": 2,
+        "type": "multichoix",
+        "question": "Quelle commande SQL permet de récupérer des données?",
+        "options": [
+            "GET",
+            "SELECT",
+            "FETCH",
+            "RETRIEVE"
+        ],
+        "correctAnswer": 1,
+        "explanation": "SELECT est utilisée pour interroger et récupérer des données depuis une base."
+    },
+    {
+        "id": 3,
+        "type": "multichoix",
+        "question": "Comment sélectionne-t-on toutes les colonnes d'une table?",
+        "options": [
+            "SELECT *",
+            "SELECT ALL",
+            "SELECT COLUMNS",
+            "SELECT ."
+        ],
+        "correctAnswer": 0,
+        "explanation": "SELECT * sélectionne toutes les colonnes de la table spécifiée."
+    },
+    {
+        "id": 4,
+        "type": "multichoix",
+        "question": "Quelle clause permet de filtrer les résultats?",
+        "options": [
+            "FILTER BY",
+            "WHERE",
+            "HAVING",
+            "CONDITION"
+        ],
+        "correctAnswer": 1,
+        "explanation": "WHERE permet de filtrer les lignes selon une condition."
+    },
+    {
+        "id": 5,
+        "type": "multichoix",
+        "question": "Comment trie-t-on les résultats par ordre croissant?",
+        "options": [
+            "SORT BY",
+            "ORDER BY",
+            "ASC BY",
+            "Les deux premières réponses"
+        ],
+        "correctAnswer": 1,
+        "explanation": "ORDER BY colonne ASC (croissant) ou DESC (décroissant)."
+    },
+    {
+        "id": 6,
+        "type": "multichoix",
+        "question": "Quel opérateur permet de vérifier si une valeur est dans une liste?",
+        "options": [
+            "IN",
+            "BETWEEN",
+            "EXISTS",
+            "CONTAINS"
+        ],
+        "correctAnswer": 0,
+        "explanation": "IN vérifie si une valeur est présente dans une liste de valeurs."
+    },
+    {
+        "id": 7,
+        "type": "multichoix",
+        "question": "Comment vérifie-t-on les valeurs NULL?",
+        "options": [
+            "= NULL",
+            "IS NULL",
+            "== NULL",
+            "NULL()"
+        ],
+        "correctAnswer": 1,
+        "explanation": "IS NULL vérifie si une valeur est NULL, IS NOT NULL pour l'inverse."
+    },
+    {
+        "id": 8,
+        "type": "multichoix",
+        "question": "Quelle fonction agrège des valeurs en une seule?",
+        "options": [
+            "COUNT",
+            "SUM",
+            "AVG",
+            "Toutes ces réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "COUNT, SUM, AVG, MAX, MIN sont des fonctions d'agrégation."
+    },
+    {
+        "id": 9,
+        "type": "multichoix",
+        "question": "Comment compte-t-on le nombre de lignes?",
+        "options": [
+            "TOTAL()",
+            "COUNT(*)",
+            "SUM()",
+            "ROWS()"
+        ],
+        "correctAnswer": 1,
+        "explanation": "COUNT(*) retourne le nombre total de lignes dans le résultat."
+    },
+    {
+        "id": 10,
+        "type": "multichoix",
+        "question": "Quelle clause permet de grouper des lignes?",
+        "options": [
+            "GROUP BY",
+            "PARTITION BY",
+            "CLUSTER BY",
+            "CATEGORIZE BY"
+        ],
+        "correctAnswer": 0,
+        "explanation": "GROUP BY regroupe les lignes ayant les mêmes valeurs."
+    },
+    {
+        "id": 11,
+        "type": "multichoix",
+        "question": "Quelle clause filtre les groupes?",
+        "options": [
+            "WHERE",
+            "HAVING",
+            "FILTER",
+            "GROUP WHERE"
+        ],
+        "correctAnswer": 1,
+        "explanation": "HAVING filtre les groupes créés par GROUP BY, WHERE filtre les lignes individuelles."
+    },
+    {
+        "id": 12,
+        "type": "multichoix",
+        "question": "Comment joint-on deux tables?",
+        "options": [
+            "JOIN",
+            "MERGE",
+            "COMBINE",
+            "UNITE"
+        ],
+        "correctAnswer": 0,
+        "explanation": "JOIN permet de combiner des lignes de deux tables ou plus."
+    },
+    {
+        "id": 13,
+        "type": "multichoix",
+        "question": "Quel type de JOIN retourne toutes les lignes des deux tables?",
+        "options": [
+            "INNER JOIN",
+            "LEFT JOIN",
+            "FULL OUTER JOIN",
+            "CROSS JOIN"
+        ],
+        "correctAnswer": 2,
+        "explanation": "FULL OUTER JOIN retourne toutes les lignes des deux tables."
+    },
+    {
+        "id": 14,
+        "type": "multichoix",
+        "question": "Quel JOIN retourne seulement les correspondances?",
+        "options": [
+            "INNER JOIN",
+            "LEFT JOIN",
+            "RIGHT JOIN",
+            "FULL JOIN"
+        ],
+        "correctAnswer": 0,
+        "explanation": "INNER JOIN retourne seulement les lignes avec correspondance dans les deux tables."
+    },
+    {
+        "id": 15,
+        "type": "multichoix",
+        "question": "Comment insère-t-on de nouvelles données?",
+        "options": [
+            "ADD",
+            "INSERT",
+            "CREATE",
+            "NEW"
+        ],
+        "correctAnswer": 1,
+        "explanation": "INSERT INTO table (colonnes) VALUES (valeurs) ajoute de nouvelles lignes."
+    },
+    {
+        "id": 16,
+        "type": "multichoix",
+        "question": "Comment modifie-t-on des données existantes?",
+        "options": [
+            "MODIFY",
+            "UPDATE",
+            "ALTER",
+            "CHANGE"
+        ],
+        "correctAnswer": 1,
+        "explanation": "UPDATE table SET colonne = valeur WHERE condition modifie des données."
+    },
+    {
+        "id": 17,
+        "type": "multichoix",
+        "question": "Comment supprime-t-on des données?",
+        "options": [
+            "REMOVE",
+            "DELETE",
+            "DROP",
+            "ERASE"
+        ],
+        "correctAnswer": 1,
+        "explanation": "DELETE FROM table WHERE condition supprime des lignes."
+    },
+    {
+        "id": 18,
+        "type": "multichoix",
+        "question": "Comment crée-t-on une nouvelle table?",
+        "options": [
+            "NEW TABLE",
+            "CREATE TABLE",
+            "ADD TABLE",
+            "MAKE TABLE"
+        ],
+        "correctAnswer": 1,
+        "explanation": "CREATE TABLE nom (colonne1 type, colonne2 type, ...) crée une table."
+    },
+    {
+        "id": 19,
+        "type": "multichoix",
+        "question": "Comment supprime-t-on une table?",
+        "options": [
+            "DELETE TABLE",
+            "DROP TABLE",
+            "REMOVE TABLE",
+            "ERASE TABLE"
+        ],
+        "correctAnswer": 1,
+        "explanation": "DROP TABLE nom supprime définitivement une table et ses données."
+    },
+    {
+        "id": 20,
+        "type": "multichoix",
+        "question": "Quel mot-clé garantit l'unicité des valeurs?",
+        "options": [
+            "UNIQUE",
+            "DISTINCT",
+            "PRIMARY",
+            "Les deux premières réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "UNIQUE comme contrainte, DISTINCT dans SELECT pour éliminer les doublons."
+    },
+    {
+        "id": 21,
+        "type": "multichoix",
+        "question": "Qu'est-ce qu'une clé primaire?",
+        "options": [
+            "Une colonne qui identifie uniquement chaque ligne",
+            "La première colonne de la table",
+            "Une colonne obligatoire",
+            "Une colonne indexée"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Une clé primaire identifie de manière unique chaque enregistrement (NOT NULL + UNIQUE)."
+    },
+    {
+        "id": 22,
+        "type": "multichoix",
+        "question": "Qu'est-ce qu'une clé étrangère?",
+        "options": [
+            "Une clé qui référence une clé primaire d'une autre table",
+            "Une clé non utilisée",
+            "Une clé temporaire",
+            "Une clé cryptée"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Une clé étrangère établit une relation entre deux tables."
+    },
+    {
+        "id": 23,
+        "type": "multichoix",
+        "question": "Comment ajoute-t-on une contrainte NOT NULL?",
+        "options": [
+            "ADD NOT NULL",
+            "SET NOT NULL",
+            "ALTER COLUMN SET NOT NULL",
+            "MODIFY NOT NULL"
+        ],
+        "correctAnswer": 2,
+        "explanation": "ALTER TABLE table ALTER COLUMN colonne SET NOT NULL (syntaxe peut varier)."
+    },
+    {
+        "id": 24,
+        "type": "multichoix",
+        "question": "Quelle commande modifie la structure d'une table?",
+        "options": [
+            "UPDATE",
+            "MODIFY",
+            "ALTER",
+            "CHANGE"
+        ],
+        "correctAnswer": 2,
+        "explanation": "ALTER TABLE permet d'ajouter, supprimer ou modifier des colonnes."
+    },
+    {
+        "id": 25,
+        "type": "multichoix",
+        "question": "Comment ajoute-t-on une colonne à une table existante?",
+        "options": [
+            "ADD COLUMN",
+            "INSERT COLUMN",
+            "NEW COLUMN",
+            "CREATE COLUMN"
+        ],
+        "correctAnswer": 0,
+        "explanation": "ALTER TABLE table ADD COLUMN nom type; ajoute une nouvelle colonne."
+    },
+    {
+        "id": 26,
+        "type": "multichoix",
+        "question": "Quelle fonction retourne la longueur d'une chaîne?",
+        "options": [
+            "LEN()",
+            "LENGTH()",
+            "SIZE()",
+            "CHAR_LENGTH()"
+        ],
+        "correctAnswer": 1,
+        "explanation": "LENGTH() retourne le nombre de caractères d'une chaîne (syntaxe peut varier)."
+    },
+    {
+        "id": 27,
+        "type": "multichoix",
+        "question": "Comment convertit-on un texte en majuscules?",
+        "options": [
+            "UPPER()",
+            "TO_UPPER()",
+            "CAPITALIZE()",
+            "UCASE()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "UPPER(chaîne) convertit une chaîne en majuscules."
+    },
+    {
+        "id": 28,
+        "type": "multichoix",
+        "question": "Comment extrait-on une partie d'une chaîne?",
+        "options": [
+            "SUBSTRING()",
+            "EXTRACT()",
+            "SLICE()",
+            "PART()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "SUBSTRING(chaîne FROM début FOR longueur) extrait une sous-chaîne."
+    },
+    {
+        "id": 29,
+        "type": "multichoix",
+        "question": "Quelle fonction retourne la date courante?",
+        "options": [
+            "NOW()",
+            "CURRENT_DATE()",
+            "TODAY()",
+            "GETDATE()"
+        ],
+        "correctAnswer": 0,
+        "explanation": "NOW() retourne la date et heure courantes (syntaxe peut varier)."
+    },
+    {
+        "id": 30,
+        "type": "multichoix",
+        "question": "Comment formate-t-on une date?",
+        "options": [
+            "FORMAT_DATE()",
+            "TO_CHAR()",
+            "DATE_FORMAT()",
+            "Les réponses varient selon le SGBD"
+        ],
+        "correctAnswer": 3,
+        "explanation": "La fonction de formatage de date varie: DATE_FORMAT() MySQL, TO_CHAR() Oracle/PostgreSQL, etc."
+    },
+    {
+        "id": 31,
+        "type": "multichoix",
+        "question": "Quel opérateur utilise-t-on pour les recherches de texte?",
+        "options": [
+            "MATCH",
+            "CONTAINS",
+            "LIKE",
+            "SEARCH"
+        ],
+        "correctAnswer": 2,
+        "explanation": "LIKE permet des recherches avec des motifs (% pour plusieurs caractères, _ pour un seul)."
+    },
+    {
+        "id": 32,
+        "type": "multichoix",
+        "question": "Comment combine-t-on les résultats de deux SELECT?",
+        "options": [
+            "MERGE",
+            "UNION",
+            "COMBINE",
+            "JOIN"
+        ],
+        "correctAnswer": 1,
+        "explanation": "UNION combine les résultats de deux requêtes (élimine les doublons)."
+    },
+    {
+        "id": 33,
+        "type": "multichoix",
+        "question": "Quelle vue système contient les informations sur les tables?",
+        "options": [
+            "SYS_TABLES",
+            "INFORMATION_SCHEMA",
+            "DATABASE_CATALOG",
+            "TABLE_INFO"
+        ],
+        "correctAnswer": 1,
+        "explanation": "INFORMATION_SCHEMA contient les métadonnées de la base de données."
+    },
+    {
+        "id": 34,
+        "type": "multichoix",
+        "question": "Comment crée-t-on une vue?",
+        "options": [
+            "NEW VIEW",
+            "CREATE VIEW",
+            "DEFINE VIEW",
+            "MAKE VIEW"
+        ],
+        "correctAnswer": 1,
+        "explanation": "CREATE VIEW nom AS SELECT ... crée une vue (requête stockée)."
+    },
+    {
+        "id": 35,
+        "type": "multichoix",
+        "question": "Qu'est-ce qu'une transaction?",
+        "options": [
+            "Une série d'opérations atomiques",
+            "Un type de table",
+            "Une jointure complexe",
+            "Une sauvegarde"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Une transaction est une unité de travail qui doit être exécutée complètement ou pas du tout."
+    },
+    {
+        "id": 36,
+        "type": "multichoix",
+        "question": "Comment commence-t-on une transaction?",
+        "options": [
+            "START TRANSACTION",
+            "BEGIN TRANSACTION",
+            "BEGIN",
+            "Toutes ces réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "La syntaxe varie: START TRANSACTION, BEGIN, BEGIN TRANSACTION selon le SGBD."
+    },
+    {
+        "id": 37,
+        "type": "multichoix",
+        "question": "Comment valide-t-on une transaction?",
+        "options": [
+            "COMMIT",
+            "VALIDATE",
+            "CONFIRM",
+            "ACCEPT"
+        ],
+        "correctAnswer": 0,
+        "explanation": "COMMIT valide définitivement les modifications d'une transaction."
+    },
+    {
+        "id": 38,
+        "type": "multichoix",
+        "question": "Comment annule-t-on une transaction?",
+        "options": [
+            "CANCEL",
+            "ROLLBACK",
+            "UNDO",
+            "ABORT"
+        ],
+        "correctAnswer": 1,
+        "explanation": "ROLLBACK annule toutes les opérations de la transaction courante."
+    },
+    {
+        "id": 39,
+        "type": "multichoix",
+        "question": "Qu'est-ce qu'un index?",
+        "options": [
+            "Une structure qui accélère les recherches",
+            "Une table de correspondance",
+            "Une clé primaire",
+            "Une vue matérialisée"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Un index améliore les performances des requêtes de recherche."
+    },
+    {
+        "id": 40,
+        "type": "multichoix",
+        "question": "Comment crée-t-on un index?",
+        "options": [
+            "ADD INDEX",
+            "CREATE INDEX",
+            "MAKE INDEX",
+            "NEW INDEX"
+        ],
+        "correctAnswer": 1,
+        "explanation": "CREATE INDEX nom_index ON table (colonne) crée un index."
+    },
+    {
+        "id": 41,
+        "type": "multichoix",
+        "question": "Quelle commande permet de sauvegarder une base?",
+        "options": [
+            "BACKUP",
+            "EXPORT",
+            "SAVE",
+            "La commande varie selon le SGBD"
+        ],
+        "correctAnswer": 3,
+        "explanation": "La commande de sauvegarde varie: BACKUP DATABASE SQL Server, pg_dump PostgreSQL, mysqldump MySQL, etc."
+    },
+    {
+        "id": 42,
+        "type": "multichoix",
+        "question": "Comment limite-t-on le nombre de résultats?",
+        "options": [
+            "LIMIT",
+            "TOP",
+            "ROWNUM",
+            "Toutes ces réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "LIMIT MySQL/PostgreSQL, TOP SQL Server, ROWNUM Oracle."
+    },
+    {
+        "id": 43,
+        "type": "multichoix",
+        "question": "Qu'est-ce qu'une sous-requête?",
+        "options": [
+            "Une requête dans une autre requête",
+            "Une requête simple",
+            "Une requête de sauvegarde",
+            "Une requête système"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Une sous-requête (subquery) est une requête imbriquée dans une autre."
+    },
+    {
+        "id": 44,
+        "type": "multichoix",
+        "question": "Quel opérateur existe-t-il pour les sous-requêtes?",
+        "options": [
+            "EXISTS",
+            "IN",
+            "ANY/ALL",
+            "Toutes ces réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "EXISTS, IN, ANY, ALL sont des opérateurs utilisables avec les sous-requêtes."
+    },
+    {
+        "id": 45,
+        "type": "multichoix",
+        "question": "Qu'est-ce qu'une jointure naturelle?",
+        "options": [
+            "NATURAL JOIN",
+            "Une jointure implicite sur les colonnes de même nom",
+            "Une jointure sans condition ON",
+            "Toutes ces réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "NATURAL JOIN joint automatiquement sur les colonnes de même nom."
+    },
+    {
+        "id": 46,
+        "type": "multichoix",
+        "question": "Comment crée-t-on un utilisateur?",
+        "options": [
+            "ADD USER",
+            "CREATE USER",
+            "NEW USER",
+            "MAKE USER"
+        ],
+        "correctAnswer": 1,
+        "explanation": "CREATE USER nom IDENTIFIED BY 'motdepasse' crée un nouvel utilisateur."
+    },
+    {
+        "id": 47,
+        "type": "multichoix",
+        "question": "Comment accorde-t-on des privilèges?",
+        "options": [
+            "ALLOW",
+            "GRANT",
+            "PERMIT",
+            "AUTHORIZE"
+        ],
+        "correctAnswer": 1,
+        "explanation": "GRANT privilège ON table TO utilisateur accorde des permissions."
+    },
+    {
+        "id": 48,
+        "type": "multichoix",
+        "question": "Comment révoque-t-on des privilèges?",
+        "options": [
+            "REMOVE",
+            "REVOKE",
+            "DENY",
+            "BLOCK"
+        ],
+        "correctAnswer": 1,
+        "explanation": "REVOKE privilège ON table FROM utilisateur retire des permissions."
+    },
+    {
+        "id": 49,
+        "type": "multichoix",
+        "question": "Qu'est-ce qu'un trigger?",
+        "options": [
+            "Un déclencheur exécuté automatiquement",
+            "Un type d'index",
+            "Une contrainte",
+            "Une vue"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Un trigger est une procédure stockée exécutée automatiquement lors d'événements."
+    },
+    {
+        "id": 50,
+        "type": "multichoix",
+        "question": "Comment crée-t-on une procédure stockée?",
+        "options": [
+            "CREATE PROCEDURE",
+            "CREATE FUNCTION",
+            "MAKE PROCEDURE",
+            "Les deux premières réponses"
+        ],
+        "explanation": "CREATE PROCEDURE pour les procédures, CREATE FUNCTION pour les fonctions."
+    },
+    {
+        "id": 51,
+        "type": "multichoix",
+        "question": "Quel type de jointure produit un produit cartésien?",
+        "options": [
+            "CROSS JOIN",
+            "INNER JOIN",
+            "NATURAL JOIN",
+            "SELF JOIN"
+        ],
+        "correctAnswer": 0,
+        "explanation": "CROSS JOIN retourne toutes les combinaisons possibles des lignes des deux tables."
+    },
+    {
+        "id": 52,
+        "type": "multichoix",
+        "question": "Comment fait-on une jointure sur la même table?",
+        "options": [
+            "SELF JOIN",
+            "SAME JOIN",
+            "AUTO JOIN",
+            "IDENTICAL JOIN"
+        ],
+        "correctAnswer": 0,
+        "explanation": "SELF JOIN permet de joindre une table avec elle-même."
+    },
+    {
+        "id": 53,
+        "type": "multichoix",
+        "question": "Quelle fonction arrondit un nombre?",
+        "options": [
+            "ROUND()",
+            "TRUNCATE()",
+            "FLOOR()",
+            "Toutes ces réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "ROUND() arrondit, TRUNCATE() tronque, FLOOR() arrondit à l'entier inférieur."
+    },
+    {
+        "id": 54,
+        "type": "multichoix",
+        "question": "Comment calcule-t-on la différence entre deux dates?",
+        "options": [
+            "DATEDIFF()",
+            "DATE_SUB()",
+            "INTERVAL",
+            "La fonction varie selon le SGBD"
+        ],
+        "correctAnswer": 3,
+        "explanation": "DATEDIFF() SQL Server/MySQL, DATE_PART() PostgreSQL, etc."
+    },
+    {
+        "id": 55,
+        "type": "multichoix",
+        "question": "Qu'est-ce que la normalisation?",
+        "options": [
+            "Organiser les données pour réduire la redondance",
+            "Convertir les données en minuscules",
+            "Standardiser les formats de données",
+            "Optimiser les performances"
+        ],
+        "correctAnswer": 0,
+        "explanation": "La normalisation organise les tables pour éliminer la redondance et les anomalies."
+    },
+    {
+        "id": 56,
+        "type": "multichoix",
+        "question": "Quelle forme normale élimine les dépendances partielles?",
+        "options": [
+            "1NF",
+            "2NF",
+            "3NF",
+            "BCNF"
+        ],
+        "correctAnswer": 1,
+        "explanation": "La 2NF élimine les dépendances partielles (tout attribut non clé dépend de toute la clé)."
+    },
+    {
+        "id": 57,
+        "type": "multichoix",
+        "question": "Quel opérateur combine les conditions?",
+        "options": [
+            "AND/OR",
+            "&&/||",
+            "+/-",
+            "Les deux premières réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "AND/OR en SQL standard, &&/|| dans certains SGBD."
+    },
+    {
+        "id": 58,
+        "type": "multichoix",
+        "question": "Comment vérifie-t-on un intervalle de valeurs?",
+        "options": [
+            "RANGE",
+            "BETWEEN",
+            "INTERVAL",
+            "IN"
+        ],
+        "correctAnswer": 1,
+        "explanation": "BETWEEN valeur1 AND valeur2 vérifie un intervalle inclusif."
+    },
+    {
+        "id": 59,
+        "type": "multichoix",
+        "question": "Quelle clause permet de renommer les colonnes?",
+        "options": [
+            "RENAME",
+            "AS",
+            "ALIAS",
+            "Les deux dernières réponses"
+        ],
+        "correctAnswer": 3,
+        "explanation": "AS permet de donner un alias à une colonne ou table."
+    },
+    {
+        "id": 60,
+        "type": "multichoix",
+        "question": "Qu'est-ce qu'un SGBD?",
+        "options": [
+            "Système de Gestion de Base de Données",
+            "Software for Database Management",
+            "Structured Database Manager",
+            "Simple Database Module"
+        ],
+        "correctAnswer": 0,
+        "explanation": "SGBD signifie Système de Gestion de Base de Données (DBMS en anglais)."
+    }
+];
+
+                document.getElementById("progress-text").textContent = "Question 1/"+quizQuestions.length;
+
+        // DOM Elements
+        const questionContainer = document.getElementById('question-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultsBtn = document.getElementById('results-btn');
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const scoreText = document.getElementById('score-text');
+        const resultsList = document.getElementById('results-list');
+        const restartBtn = document.getElementById('restart-btn');
+
+        // Quiz state
+        let currentQuestionIndex = 0;
+        let userAnswers = JSON.parse(localStorage.getItem('javaQuizAnswers')) || Array(quizQuestions.length).fill(null);
+
+        // Initialize the quiz
+        function initQuiz() {
+            displayQuestion(currentQuestionIndex);
+            updateProgress();
+            updateNavigationButtons();
+        }
+
+        // Display current question
+        function displayQuestion(index) {
+            const question = quizQuestions[index];
+            let questionHTML = '';
+
+            if (question.type === 'vrai-faux') {
+                questionHTML = `
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">${question.question}</h3>
+                        <div class="flex space-x-4">
+                            <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-150 flex-1 ${userAnswers[index] === 'vrai' ? 'border-indigo-500 bg-indigo-50' : ''}">
+                                <input type="radio" name="answer" value="vrai" class="hidden" ${userAnswers[index] === 'vrai' ? 'checked' : ''}>
+                                <div class="flex items-center justify-center w-6 h-6 border-2 border-gray-300 rounded-full mr-3 ${userAnswers[index] === 'vrai' ? 'border-indigo-500 bg-indigo-500' : ''}">
+                                    ${userAnswers[index] === 'vrai' ? '<i class="fas fa-check text-white text-xs"></i>' : ''}
+                                </div>
+                                <span class="text-lg">Vrai</span>
+                            </label>
+                            <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-150 flex-1 ${userAnswers[index] === 'faux' ? 'border-indigo-500 bg-indigo-50' : ''}">
+                                <input type="radio" name="answer" value="faux" class="hidden" ${userAnswers[index] === 'faux' ? 'checked' : ''}>
+                                <div class="flex items-center justify-center w-6 h-6 border-2 border-gray-300 rounded-full mr-3 ${userAnswers[index] === 'faux' ? 'border-indigo-500 bg-indigo-500' : ''}">
+                                    ${userAnswers[index] === 'faux' ? '<i class="fas fa-check text-white text-xs"></i>' : ''}
+                                </div>
+                                <span class="text-lg">Faux</span>
+                            </label>
+                        </div>
+                    </div>
+                `;
+            } else if (question.type === 'multichoix') {
+                questionHTML = `
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">${question.question}</h3>
+                        <div class="space-y-3">
+                            ${question.options.map((option, i) => `
+                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-150 ${userAnswers[index] === i ? 'border-indigo-500 bg-indigo-50' : ''}">
+                                    <input type="radio" name="answer" value="${i}" class="hidden" ${userAnswers[index] === i ? 'checked' : ''}>
+                                    <div class="flex items-center justify-center w-6 h-6 border-2 border-gray-300 rounded-full mr-3 ${userAnswers[index] === i ? 'border-indigo-500 bg-indigo-500' : ''}">
+                                        ${userAnswers[index] === i ? '<i class="fas fa-check text-white text-xs"></i>' : ''}
+                                    </div>
+                                    <span class="text-lg">${option}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            questionContainer.innerHTML = questionHTML;
+
+            // Add event listeners to answer options
+            const answerOptions = questionContainer.querySelectorAll('label');
+            answerOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    // Remove selection from all options
+                    answerOptions.forEach(opt => {
+                        opt.classList.remove('border-indigo-500', 'bg-indigo-50');
+                        const radio = opt.querySelector('input[type="radio"]');
+                        const checkIcon = opt.querySelector('.fa-check');
+                        if (checkIcon) {
+                            checkIcon.parentElement.classList.remove('border-indigo-500', 'bg-indigo-500');
+                            checkIcon.remove();
+                        }
+                    });
+
+                    // Select clicked option
+                    option.classList.add('border-indigo-500', 'bg-indigo-50');
+                    const radio = option.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                    
+                    const checkDiv = option.querySelector('div');
+                    checkDiv.classList.add('border-indigo-500', 'bg-indigo-500');
+                    checkDiv.innerHTML = '<i class="fas fa-check text-white text-xs"></i>';
+                    
+                    // Save answer
+                    saveAnswer(index, radio.value);
+                });
+            });
+        }
+
+        // Save answer to localStorage
+        function saveAnswer(index, answer) {
+            userAnswers[index] = answer;
+            localStorage.setItem('javaQuizAnswers', JSON.stringify(userAnswers));
+            updateNavigationButtons();
+        }
+
+        // Update progress bar and text
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `Question ${currentQuestionIndex + 1}/${quizQuestions.length}`;
+        }
+
+        // Update navigation buttons state
+        function updateNavigationButtons() {
+            prevBtn.disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === quizQuestions.length - 1) {
+                nextBtn.classList.add('hidden');
+                resultsBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                resultsBtn.classList.add('hidden');
+            }
+        }
+
+        // Show results
+        function showResults() {
+            let score = 0;
+            resultsList.innerHTML = '';
+
+            quizQuestions.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                let isCorrect = false;
+                
+                if (question.type === 'vrai-faux') {
+                    isCorrect = userAnswer === question.correctAnswer;
+                } else if (question.type === 'multichoix') {
+                    isCorrect = parseInt(userAnswer) === question.correctAnswer;
+                }
+                
+                if (isCorrect) score++;
+                
+                const resultItem = document.createElement('div');
+                resultItem.className = `p-4 rounded-lg border ${isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`;
+                
+                let userAnswerText = '';
+                if (question.type === 'vrai-faux') {
+                    userAnswerText = userAnswer || 'Non répondu';
+                } else if (question.type === 'multichoix') {
+                    userAnswerText = userAnswer !== null ? question.options[userAnswer] : 'Non répondu';
+                }
+                
+                resultItem.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1 mr-3">
+                            <i class="fas ${isCorrect ? 'fa-check-circle text-green-500' : 'fa-times-circle text-red-500'}"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800">${question.question}</h4>
+                            <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <div class="${isCorrect ? 'text-green-700' : 'text-red-700'}">
+                                    <span class="font-medium">Votre réponse:</span>  ${!userAnswerText? "vous n'avez pas répondu" : userAnswerText}
+                                </div>
+                                ${!isCorrect ? `
+                                    <div class="text-green-700">
+                                        <span class="font-medium">Bonne réponse:</span> 
+                                        ${question.type === 'vrai-faux' ? question.correctAnswer : question.options[question.correctAnswer]}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="mt-2 text-gray-600 text-sm">
+                                <i class="fas fa-info-circle mr-1"></i> ${question.explanation}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                resultsList.appendChild(resultItem);
+            });
+            
+            scoreText.textContent = `Score: ${score}/${quizQuestions.length}`;
+            quizContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+        }
+
+        // Event Listeners
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion(currentQuestionIndex);
+                updateProgress();
+                updateNavigationButtons();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion(currentQuestionIndex);
+                updateProgress();
+                updateNavigationButtons();
+            }
+        });
+
+        resultsBtn.addEventListener('click', showResults);
+
+        restartBtn.addEventListener('click', () => {
+            // Clear saved answers
+            localStorage.removeItem('javaQuizAnswers');
+            userAnswers = Array(quizQuestions.length).fill(null);
+            currentQuestionIndex = 0;
+            
+            // Reset UI
+            resultsContainer.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            
+            // Reinitialize quiz
+            initQuiz();
+        });
+
+        // Initialize the quiz
+        initQuiz();
+    </script>
+</body>
+</html>
