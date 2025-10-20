@@ -2,20 +2,40 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quiz Python</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />    
+    <title>Quiz Javascript</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+    ></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <style>
+      @keyframes shake {
+        10%, 90% { transform: translate3d(-1px, 0, 0); }
+        20%, 80% { transform: translate3d(2px, 0, 0); }
+        30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+        40%, 60% { transform: translate3d(4px, 0, 0); }
+      }
+      .shake {
+        animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+      }
+    </style>
   </head>
   <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen py-8">
     <div class="container mx-auto px-4 max-w-4xl">
       <!-- Header -->
       <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-indigo-800 mb-2">Quiz Python</h1>
-        <p class="text-lg text-gray-600">Testez vos connaissances en Python</p>
+        <h1 class="text-4xl font-bold text-indigo-800 mb-2">Quiz Javascript 📜</h1>
+        <p class="text-lg text-gray-600">Testez vos connaissances en Javascript</p>
       </div>
 
       <!-- Quiz Container -->
@@ -94,13 +114,18 @@
             id="restart-btn"
             class="px-6 py-3 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-150"
           >
-            <i class="fas fa-redo mr-2"></i>Recommencer le Quiz
+            <i class="fas fa-redo mr-2"></i> Recommencer le Quiz
+          </button>
+          <button
+            id="download-pdf-btn"
+            class="px-6 py-3 text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors duration-150 ml-4"
+          >
+            <i class="fas fa-download mr-2"></i> Télécharger en PDF
           </button>
         </div>
 
         <div class="mt-8 text-center">
           <a
-            id="restart-btn"
             href="index.html"
             class="px-6 py-3 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-150"
           >
@@ -114,7 +139,255 @@
       localStorage.clear();
       // Quiz questions data
       const quizQuestions = [
-        
+        {
+          id: 1,
+          type: "multichoix",
+          question: "Comment déclare-t-on une variable en JavaScript?",
+          options: ["var", "let", "const", "Toutes ces réponses"],
+          correctAnswer: 3,
+          explanation:
+            "var, let et const sont utilisés pour déclarer des variables, mais avec des portées et des comportements différents.",
+        },
+        {
+          id: 2,
+          type: "multichoix",
+          question:
+            "Quelle méthode permet d'ajouter un élément à la fin d'un tableau?",
+          options: ["push()", "pop()", "shift()", "unshift()"],
+          correctAnswer: 0,
+          explanation: "push() ajoute un ou plusieurs éléments à la fin d'un tableau.",
+        },
+        {
+          id: 3,
+          type: "multichoix",
+          question: "Comment compare-t-on la valeur ET le type en JavaScript?",
+          options: ["==", "===", "!=", "!=="],
+          correctAnswer: 1,
+          explanation:
+            "L'opérateur '===' (égalité stricte) compare la valeur et le type, sans conversion de type.",
+        },
+        {
+          id: 4,
+          type: "multichoix",
+          question: "Comment écrit-on une fonction fléchée?",
+          options: [
+            "function() => {}",
+            "() => {}",
+            "=> function() {}",
+            "() -> {}",
+          ],
+          correctAnswer: 1,
+          explanation:
+            "La syntaxe d'une fonction fléchée est (paramètres) => { corps }.",
+        },
+        {
+          id: 5,
+          type: "multichoix",
+          question:
+            "Quelle méthode permet de sélectionner un élément HTML par son ID?",
+          options: [
+            "getElementByName()",
+            "querySelector()",
+            "getElementById()",
+            "Les deux dernières réponses",
+          ],
+          correctAnswer: 3,
+          explanation:
+            "getElementById('id') et querySelector('#id') permettent de sélectionner un élément par son ID.",
+        },
+        {
+          id: 6,
+          type: "multichoix",
+          question: "Qu'est-ce qu'une fermeture (closure) en JavaScript?",
+          options: [
+            "Une fonction qui n'a pas de nom",
+            "Une fonction qui se ferme automatiquement après exécution",
+            "Une fonction qui se souvient de son scope lexical, même lorsqu'elle est exécutée hors de ce scope",
+            "Une fonction qui ne peut être appelée qu'une seule fois",
+          ],
+          correctAnswer: 2,
+          explanation:
+            "Une fermeture est une fonction qui a accès à son propre scope, au scope de la fonction externe, et au scope global.",
+        },
+        {
+          id: 7,
+          type: "multichoix",
+          question: "Quelle est la différence entre 'null' et 'undefined'?",
+          options: [
+            "Aucune, ils sont identiques",
+            "'undefined' signifie qu'une variable a été déclarée mais pas assignée, 'null' est une valeur d'assignation",
+            "'null' est une erreur, 'undefined' ne l'est pas",
+            "'undefined' est un objet, 'null' est un type primitif",
+          ],
+          correctAnswer: 1,
+          explanation:
+            "'undefined' est la valeur par défaut des variables non initialisées. 'null' est une valeur explicite signifiant 'aucune valeur'.",
+        },
+        {
+          id: 8,
+          type: "multichoix",
+          question:
+            "Quelle méthode de tableau crée un nouveau tableau avec les résultats de l'appel d'une fonction fournie sur chaque élément?",
+          options: ["forEach()", "map()", "filter()", "reduce()"],
+          correctAnswer: 1,
+          explanation:
+            "map() crée un nouveau tableau en appliquant une fonction à chaque élément du tableau d'origine.",
+        },
+        {
+          id: 9,
+          type: "multichoix",
+          question:
+            "Comment gérez-vous les opérations asynchrones en JavaScript moderne?",
+          options: ["Callbacks", "Promises", "Async/Await", "Toutes ces réponses"],
+          correctAnswer: 3,
+          explanation:
+            "Les Callbacks sont la méthode traditionnelle, mais les Promises et Async/Await sont des approches plus modernes et lisibles pour gérer l'asynchronisme.",
+        },
+        {
+          id: 10,
+          type: "multichoix",
+          question: "Que fait l'opérateur '...' (spread operator)?",
+          options: [
+            "Il additionne tous les éléments d'un tableau",
+            "Il permet d'étendre un itérable (comme un tableau) là où des arguments ou des éléments sont attendus",
+            "Il crée une référence à un autre tableau",
+            "Il accède au dernier élément d'un tableau",
+          ],
+          correctAnswer: 1,
+          explanation:
+            "L'opérateur '...' peut être utilisé pour copier des tableaux, concaténer des tableaux, ou passer des éléments de tableau comme arguments de fonction.",
+        },
+        {
+          id: 11,
+          type: "multichoix",
+          question: "Qu'est-ce que le 'hoisting' (remontée) en JavaScript?",
+          options: [
+            "Uniquement les déclarations de variables avec 'let' sont remontées",
+            "Le processus où l'interpréteur semble déplacer les déclarations de variables et de fonctions en haut de leur scope",
+            "Une erreur qui se produit lorsque les variables ne sont pas déclarées",
+            "La conversion automatique des types de données",
+          ],
+          correctAnswer: 1,
+          explanation:
+            "En raison du hoisting, les déclarations de variables (avec 'var') et de fonctions sont traitées avant toute exécution de code.",
+        },
+        {
+          id: 12,
+          type: "multichoix",
+          question:
+            "Quelle méthode de tableau vérifie si au moins un élément du tableau passe le test implémenté par la fonction fournie?",
+          options: ["every()", "some()", "find()", "includes()"],
+          correctAnswer: 1,
+          explanation:
+            "some() retourne 'true' si la fonction de callback retourne 'true' pour au moins un élément du tableau; sinon, elle retourne 'false'.",
+        },
+        {
+          id: 13,
+          type: "multichoix",
+          question: "À quoi sert `JSON.stringify()`?",
+          options: [
+            "À analyser une chaîne JSON pour créer un objet JavaScript",
+            "À convertir un objet JavaScript en une chaîne JSON",
+            "À vérifier si une chaîne est un JSON valide",
+            "À compresser une chaîne JSON",
+          ],
+          correctAnswer: 1,
+          explanation:
+            "`JSON.stringify()` est utilisé pour sérialiser un objet JavaScript en une chaîne de caractères au format JSON, souvent pour l'envoyer à un serveur.",
+        },
+        {
+          id: 14,
+          type: "multichoix",
+          question: "Comment fonctionne le mot-clé `this` dans une fonction fléchée?",
+          options: [
+            "Il se réfère toujours à l'objet global 'window'",
+            "Il est déterminé par la façon dont la fonction est appelée",
+            "Il n'existe pas dans les fonctions fléchées",
+            "Il conserve la valeur 'this' du contexte lexical qui l'entoure",
+          ],
+          correctAnswer: 3,
+          explanation:
+            "Contrairement aux fonctions classiques, les fonctions fléchées n'ont pas leur propre contexte 'this'. Elles héritent du 'this' de leur parent.",
+        },
+        {
+          id: 15,
+          type: "multichoix",
+          question: "Qu'est-ce que la déstructuration (destructuring) en ES6?",
+          options: [
+            "Une façon de détruire des objets pour libérer de la mémoire",
+            "Une syntaxe qui permet d'extraire des données de tableaux ou d'objets dans des variables distinctes",
+            "Une méthode pour restructurer la base de code",
+            "Une erreur de syntaxe",
+          ],
+          correctAnswer: 1,
+          explanation:
+            "La déstructuration rend le code plus propre et plus lisible. Exemple : const { nom, age } = personne;",
+        },
+        {
+          id: 16,
+          type: "multichoix",
+          question: "À quoi sert la méthode `Array.prototype.reduce()`?",
+          options: [
+            "À réduire la taille d'un tableau",
+            "À exécuter une fonction 'réducteur' sur chaque élément du tableau, résultant en une seule valeur de sortie",
+            "À filtrer les éléments d'un tableau",
+            "À créer une copie réduite du tableau",
+          ],
+          correctAnswer: 1,
+          explanation:
+            "`reduce()` est souvent utilisé pour calculer la somme des éléments d'un tableau ou pour 'aplatir' un tableau de tableaux.",
+        },
+        {
+          id: 17,
+          type: "multichoix",
+          question: "Qu'est-ce qu'une `Promise` (Promesse)?",
+          options: [
+            "Une garantie que le code s'exécutera sans erreur",
+            "Un objet représentant l'achèvement ou l'échec éventuel d'une opération asynchrone",
+            "Une syntaxe pour déclarer des fonctions asynchrones",
+            "Uniquement une ancienne façon de gérer les callbacks",
+          ],
+          correctAnswer: 1,
+          explanation:
+            "Une promesse peut être dans l'un de ces états : en attente (pending), tenue (fulfilled), ou rompue (rejected).",
+        },
+        {
+          id: 18,
+          type: "multichoix",
+          question: "Comment ajouter un élément au début d'un tableau?",
+          options: ["push()", "shift()", "unshift()", "pop()"],
+          correctAnswer: 2,
+          explanation:
+            "`unshift()` ajoute un ou plusieurs éléments au début d'un tableau et renvoie la nouvelle longueur du tableau.",
+        },
+        {
+          id: 19,
+          type: "multichoix",
+          question: "Quel est le but de `use strict`?",
+          options: [
+            "Rendre le code plus rapide",
+            "Activer un mode strict qui transforme certaines erreurs silencieuses en erreurs explicites",
+            "Permettre l'utilisation de fonctionnalités plus récentes",
+            "Forcer l'utilisation de TypeScript",
+          ],
+          correctAnswer: 1,
+          explanation:
+            "Le mode strict aide à écrire un code plus sûr en prévenant ou en lançant des erreurs pour des actions considérées comme des mauvaises pratiques.",
+        },
+        {
+          id: 20,
+          type: "multichoix",
+          question: "Comment peut-on créer un nouvel élément HTML en JavaScript?",
+          options: [
+            "document.newElement('div')",
+            "document.create('div')",
+            "document.createElement('div')",
+            "new HtmlElement('div')",
+          ],
+          correctAnswer: 2,
+          explanation:
+            "La méthode `document.createElement()` crée l'élément HTML spécifié par tagName. On peut ensuite l'ajouter au DOM avec `appendChild()`.",
+        },
       ];
 
       document.getElementById("progress-text").textContent =
@@ -132,11 +405,12 @@
       const scoreText = document.getElementById("score-text");
       const resultsList = document.getElementById("results-list");
       const restartBtn = document.getElementById("restart-btn");
+      const downloadPdfBtn = document.getElementById("download-pdf-btn");
 
       // Quiz state
       let currentQuestionIndex = 0;
       let userAnswers =
-        JSON.parse(localStorage.getItem("phpQuizAnswers")) ||
+        JSON.parse(localStorage.getItem("jsQuizAnswers")) ||
         Array(quizQuestions.length).fill(null);
 
       // Initialize the quiz
@@ -281,7 +555,7 @@
       // Save answer to localStorage
       function saveAnswer(index, answer) {
         userAnswers[index] = answer;
-        localStorage.setItem("phpQuizAnswers", JSON.stringify(userAnswers));
+        localStorage.setItem("jsQuizAnswers", JSON.stringify(userAnswers));
         updateNavigationButtons();
       }
 
@@ -397,6 +671,20 @@
         scoreText.textContent = `Score: ${score}/${quizQuestions.length}`;
         quizContainer.classList.add("hidden");
         resultsContainer.classList.remove("hidden");
+
+        const scorePercentage = (score / quizQuestions.length) * 100;
+
+        if (scorePercentage >= 50) {
+          // Celebration effect
+          confetti({
+            particleCount: 200,
+            spread: 100,
+            origin: { y: 0.6 },
+          });
+        } else {
+          // Failure effect
+          resultsContainer.classList.add("shake");
+        }
       }
 
       // Event Listeners
@@ -422,18 +710,41 @@
 
       restartBtn.addEventListener("click", () => {
         // Clear saved answers
-        localStorage.removeItem("phpQuizAnswers");
+        localStorage.removeItem("jsQuizAnswers");
         userAnswers = Array(quizQuestions.length).fill(null);
         currentQuestionIndex = 0;
 
         // Reset UI
         resultsContainer.classList.add("hidden");
         quizContainer.classList.remove("hidden");
+        resultsContainer.classList.remove("shake"); // Remove shake effect on restart
 
         // Reinitialize quiz
         initQuiz();
       });
 
+      downloadPdfBtn.addEventListener("click", () => {
+        const { jsPDF } = window.jspdf;
+        const resultsToCapture = document.getElementById("results-container");
+
+        // Temporarily show the container to capture it, if it's hidden
+        const wasHidden = resultsToCapture.classList.contains("hidden");
+        if (wasHidden) {
+          resultsToCapture.classList.remove("hidden");
+        }
+
+        html2canvas(resultsToCapture).then((canvas) => {
+          if (wasHidden) {
+            resultsToCapture.classList.add("hidden");
+          }
+          const imgData = canvas.toDataURL("image/png");
+          const pdf = new jsPDF("p", "mm", "a4");
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+          pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+          pdf.save("quiz-js-results.pdf");
+        });
+      });
       // Initialize the quiz
       initQuiz();
     </script>

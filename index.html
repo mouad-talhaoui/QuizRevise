@@ -5,24 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Quiz - Page d'Accueil</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❓</text></svg>"
+    />
     <!-- Link to Tailwind CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
     <!-- Custom Styles (optional) -->
-    <link href="styles.css" rel="stylesheet" />
+    <style>
+      .parallax-bg {
+        background-image: url("https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1170");
+        min-height: 400px;
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+      }
+      .parallax-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(29, 78, 216, 0.7); /* A semi-transparent blue overlay */
+      }
+    </style>
     <script src="script.js"></script>
   </head>
 
   <body class="bg-gray-100 font-sans text-gray-900">
     <!-- Navbar -->
-    <header class="bg-blue-600 text-white p-4 shadow-md">
-      <div class="container mx-auto text-center">
-        <h1 class="text-4xl font-bold">Bienvenue sur QuizRevise</h1>
-        <p class="mt-2 text-lg">
-          Testez vos connaissances avec des quiz sur différents sujets !
-        </p>
+    <header class="parallax-bg text-white shadow-md">
+      <div class="parallax-overlay"></div>
+      <div
+        class="container mx-auto h-full flex flex-col justify-center items-center text-center relative z-10 p-4"
+      >
+        <div>
+          <h1 class="text-5xl font-bold">Bienvenue sur QuizRevise</h1>
+          <p class="mt-4 text-xl">
+            Testez vos connaissances avec des quiz sur différents sujets !
+          </p>
+        </div>
       </div>
     </header>
 
@@ -37,7 +64,7 @@
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
       >
         <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out"
+          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
         >
           <a href="php.html" class="block text-center text-xl font-semibold"
             >php</a
@@ -47,7 +74,7 @@
           </p>
         </div>
         <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out"
+          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
         >
           <a href="java.html" class="block text-center text-xl font-semibold"
             >JAVA</a
@@ -58,7 +85,7 @@
         </div>
 
         <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out"
+          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
         >
           <a href="android.html" class="block text-center text-xl font-semibold"
             >Android</a
@@ -69,7 +96,7 @@
         </div>
 
         <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out"
+          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
         >
           <a href="sql.html" class="block text-center text-xl font-semibold"
             >SQL</a
@@ -79,7 +106,7 @@
           </p>
         </div>
         <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out"
+          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
         >
           <a href="html.html" class="block text-center text-xl font-semibold"
             >HTML</a
@@ -89,7 +116,7 @@
           </p>
         </div>
         <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out"
+          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
         >
           <a href="js.html" class="block text-center text-xl font-semibold"
             >Javascript</a
@@ -99,7 +126,7 @@
           </p>
         </div>
         <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out"
+          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
         >
           <a href="c.html" class="block text-center text-xl font-semibold">C</a>
           <p class="mt-4 text-center">
@@ -107,7 +134,7 @@
           </p>
         </div>
         <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out"
+          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
         >
           <a href="python.html" class="block text-center text-xl font-semibold"
             >Python</a
@@ -117,7 +144,7 @@
           </p>
         </div>
         <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out"
+          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
         >
           <a
             href="cplusplus.html"
@@ -132,7 +159,7 @@
 
         <!-- UML -->
         <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out"
+          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
         >
           <a href="linux.html" class="block text-center text-xl font-semibold"
             >Linux</a
@@ -144,7 +171,7 @@
 
         <!-- UML -->
         <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out"
+          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
         >
           <a href="uml.html" class="block text-center text-xl font-semibold"
             >UML</a
@@ -156,7 +183,7 @@
 
         <!-- Design -->
         <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out"
+          class="bg-white p-6 rounded-lg shadow-md hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
         >
           <a href="design.html" class="block text-center text-xl font-semibold"
             >Design</a
@@ -168,7 +195,7 @@
 
         <!-- Mathématiques -->
         <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-blue-500 hover:text-white transition duration-300 ease-in-out"
+          class="bg-white p-6 rounded-lg shadow-md hover:bg-blue-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
         >
           <a href="maths.html" class="block text-center text-xl font-semibold"
             >Mathématiques</a
@@ -180,7 +207,7 @@
 
         <!-- Concours -->
         <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-green-500 hover:text-white transition duration-300 ease-in-out"
+          class="bg-white p-6 rounded-lg shadow-md hover:bg-green-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
         >
           <a
             href="concours.html"
@@ -196,6 +223,7 @@
 
     <!-- Footer -->
     <footer class="bg-gray-800 text-white p-6 mt-10 text-center">
+
       <p>&copy; 2025 QuizRevise. Tous droits réservés.</p>
       <p class="text-sm">
         QuizRevise est une plateforme d'apprentissage interactive pour les
@@ -210,5 +238,6 @@
       }
     </script>
     <!-- Optional: Add JavaScript (e.g., for handling navigation or interactive features) -->
+
   </body>
 </html>

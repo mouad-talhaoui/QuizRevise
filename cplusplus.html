@@ -3,19 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quiz Python</title>
+    <title>Quiz C++</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <style>
+      @keyframes shake {
+        10%, 90% { transform: translate3d(-1px, 0, 0); }
+        20%, 80% { transform: translate3d(2px, 0, 0); }
+        30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+        40%, 60% { transform: translate3d(4px, 0, 0); }
+      }
+      .shake {
+        animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+      }
+    </style>
   </head>
   <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen py-8">
     <div class="container mx-auto px-4 max-w-4xl">
       <!-- Header -->
       <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-indigo-800 mb-2">Quiz Python</h1>
-        <p class="text-lg text-gray-600">Testez vos connaissances en Python</p>
+        <h1 class="text-4xl font-bold text-indigo-800 mb-2">Quiz C++ 💻</h1>
+        <p class="text-lg text-gray-600">Testez vos connaissances en C++</p>
       </div>
 
       <!-- Quiz Container -->
@@ -94,13 +112,18 @@
             id="restart-btn"
             class="px-6 py-3 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-150"
           >
-            <i class="fas fa-redo mr-2"></i>Recommencer le Quiz
+            <i class="fas fa-redo mr-2"></i> Recommencer le Quiz
+          </button>
+          <button
+            id="download-pdf-btn"
+            class="px-6 py-3 text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors duration-150 ml-4"
+          >
+            <i class="fas fa-download mr-2"></i> Télécharger en PDF
           </button>
         </div>
 
         <div class="mt-8 text-center">
           <a
-            id="restart-btn"
             href="index.html"
             class="px-6 py-3 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-150"
           >
@@ -114,7 +137,200 @@
       localStorage.clear();
       // Quiz questions data
       const quizQuestions = [
-        
+        {
+          id: 1,
+          type: "multichoix",
+          question: "Quel mot-clé est utilisé pour définir une classe en C++?",
+          options: ["class", "struct", "object", "Les deux premières réponses"],
+          correctAnswer: 3,
+          explanation:
+            "En C++, 'class' et 'struct' peuvent définir une classe. La seule différence est la visibilité par défaut (privée pour class, publique pour struct).",
+        },
+        {
+          id: 2,
+          type: "multichoix",
+          question: "Comment déclare-t-on une référence en C++?",
+          options: ["int &ref = var;", "int *ref = &var;", "ref int = var;", "int ref = &var;"],
+          correctAnswer: 0,
+          explanation:
+            "Une référence est un alias pour une variable existante et se déclare avec '&'. Elle doit être initialisée.",
+        },
+        {
+          id: 3,
+          type: "multichoix",
+          question: "Quel opérateur est utilisé pour l'allocation dynamique en C++?",
+          options: ["new", "malloc()", "alloc", "create"],
+          correctAnswer: 0,
+          explanation:
+            "L'opérateur 'new' alloue de la mémoire sur le tas et appelle le constructeur de l'objet.",
+        },
+        {
+          id: 4,
+          type: "multichoix",
+          question: "Comment libère-t-on la mémoire allouée avec 'new'?",
+          options: ["delete", "free()", "remove", "dealloc"],
+          correctAnswer: 0,
+          explanation:
+            "L'opérateur 'delete' libère la mémoire et appelle le destructeur. On utilise 'delete[]' pour les tableaux.",
+        },
+        {
+          id: 5,
+          type: "multichoix",
+          question: "Qu'est-ce que le polymorphisme?",
+          options: [
+            "La capacité d'un objet à prendre plusieurs formes",
+            "L'héritage multiple",
+            "La surcharge d'opérateurs",
+            "Les templates",
+          ],
+          correctAnswer: 0,
+          explanation:
+            "Le polymorphisme permet d'utiliser un pointeur ou une référence de classe de base pour manipuler des objets de classes dérivées.",
+        },
+        {
+          id: 6,
+          type: "multichoix",
+          question: "Comment déclare-t-on une fonction virtuelle pure?",
+          options: [
+            "virtual void func() = 0;",
+            "pure virtual void func();",
+            "virtual void func() {};",
+            "abstract void func();",
+          ],
+          correctAnswer: 0,
+          explanation:
+            "Une fonction virtuelle pure est déclarée avec '= 0'. Une classe avec au moins une fonction virtuelle pure est une classe abstraite.",
+        },
+        {
+          id: 7,
+          type: "multichoix",
+          question: "Quel conteneur de la STL est un tableau dynamique?",
+          options: ["std::vector", "std::list", "std::array", "std::map"],
+          correctAnswer: 0,
+          explanation: "std::vector est un tableau de taille dynamique.",
+        },
+        {
+          id:8,
+          type: "multichoix",
+          question: "Quel conteneur associe des clés à des valeurs?",
+          options: ["std::vector", "std::list", "std::set", "std::map"],
+          correctAnswer: 3,
+          explanation: "std::map est un conteneur associatif qui stocke des paires clé-valeur.",
+        },
+        {
+          id: 9,
+          type: "multichoix",
+          question: "Qu'est-ce qu'un itérateur?",
+          options: [
+            "Un objet qui permet de parcourir un conteneur",
+            "Un type de boucle",
+            "Un pointeur intelligent",
+            "Un algorithme de tri",
+          ],
+          correctAnswer: 0,
+          explanation:
+            "Un itérateur généralise le concept de pointeur pour parcourir les éléments d'un conteneur de la STL.",
+        },
+        {
+          id: 10,
+          type: "multichoix",
+          question: "Comment gère-t-on les exceptions en C++?",
+          options: ["try-catch", "try-except", "error-handle", "check-throw"],
+          correctAnswer: 0,
+          explanation: "C++ utilise les blocs try, catch et throw pour la gestion des exceptions.",
+        },
+        {
+          id: 11,
+          type: "multichoix",
+          question: "Quel mot-clé est utilisé pour l'héritage public?",
+          options: ["public:", "private:", "protected:", "friend"],
+          correctAnswer: 0,
+          explanation:
+            "class Fille : public Mere {}; L'héritage public signifie que les membres publics de la mère restent publics dans la fille.",
+        },
+        {
+          id: 12,
+          type: "multichoix",
+          question: "Qu'est-ce que la surcharge de fonction (overloading)?",
+          options: [
+            "Définir plusieurs fonctions avec le même nom mais des paramètres différents",
+            "Redéfinir une fonction d'une classe de base",
+            "Utiliser des opérateurs avec des classes",
+            "Créer une fonction virtuelle",
+          ],
+          correctAnswer: 0,
+          explanation:
+            "La surcharge permet d'avoir plusieurs fonctions avec le même nom, différenciées par leur signature (nombre et/ou type des paramètres).",
+        },
+        {
+          id: 13,
+          type: "multichoix",
+          question: "Quel est le rôle du constructeur de copie?",
+          options: [
+            "Créer un nouvel objet comme copie d'un objet existant",
+            "Copier une classe",
+            "Créer un pointeur vers un objet",
+            "Initialiser un objet vide",
+          ],
+          correctAnswer: 0,
+          explanation:
+            "Le constructeur de copie est appelé lors de l'initialisation d'un objet à partir d'un autre objet du même type.",
+        },
+        {
+          id: 14,
+          type: "multichoix",
+          question: "Qu'est-ce qu'un template en C++?",
+          options: [
+            "Un modèle pour créer des fonctions ou des classes génériques",
+            "Une classe de base",
+            "Une interface",
+            "Une macro",
+          ],
+          correctAnswer: 0,
+          explanation:
+            "Les templates permettent d'écrire du code qui fonctionne avec n'importe quel type de données (programmation générique).",
+        },
+        {
+          id: 15,
+          type: "multichoix",
+          question: "Quel est l'équivalent de printf en C++ pour la sortie standard?",
+          options: ["std::cout", "std::cin", "printf", "std::print"],
+          correctAnswer: 0,
+          explanation:
+            "std::cout, utilisé avec l'opérateur <<, est le flux de sortie standard en C++.",
+        },
+        {
+          id: 16,
+          type: "multichoix",
+          question: "Quel en-tête faut-il inclure pour utiliser std::cout?",
+          options: ["<iostream>", "<stdio.h>", "<string>", "<vector>"],
+          correctAnswer: 0,
+          explanation:
+            "L'en-tête <iostream> contient les déclarations pour les flux d'entrée/sortie standard comme std::cin et std::cout.",
+        },
+        {
+          id: 17,
+          type: "multichoix",
+          question: "Qu'est-ce que RAII?",
+          options: [
+            "Resource Acquisition Is Initialization",
+            "Runtime-Aided Instance Initialization",
+            "Resource And Instance Inlining",
+            "Rien de tout cela",
+          ],
+          correctAnswer: 0,
+          explanation:
+            "RAII est un idiome C++ où la durée de vie d'une ressource est liée à la durée de vie d'un objet. Très utilisé avec les pointeurs intelligents.",
+        },
+        {
+          id: 18,
+          type: "multichoix",
+          question: "Quel pointeur intelligent gère la propriété exclusive?",
+          options: ["std::unique_ptr", "std::shared_ptr", "std::weak_ptr", "auto_ptr"],
+          correctAnswer: 0,
+          explanation:
+            "std::unique_ptr assure qu'un seul pointeur possède la ressource. Il ne peut pas être copié.",
+        },
       ];
 
       document.getElementById("progress-text").textContent =
@@ -132,11 +348,12 @@
       const scoreText = document.getElementById("score-text");
       const resultsList = document.getElementById("results-list");
       const restartBtn = document.getElementById("restart-btn");
+      const downloadPdfBtn = document.getElementById("download-pdf-btn");
 
       // Quiz state
       let currentQuestionIndex = 0;
       let userAnswers =
-        JSON.parse(localStorage.getItem("phpQuizAnswers")) ||
+        JSON.parse(localStorage.getItem("cplusplusQuizAnswers")) ||
         Array(quizQuestions.length).fill(null);
 
       // Initialize the quiz
@@ -281,7 +498,10 @@
       // Save answer to localStorage
       function saveAnswer(index, answer) {
         userAnswers[index] = answer;
-        localStorage.setItem("phpQuizAnswers", JSON.stringify(userAnswers));
+        localStorage.setItem(
+          "cplusplusQuizAnswers",
+          JSON.stringify(userAnswers)
+        );
         updateNavigationButtons();
       }
 
@@ -397,6 +617,20 @@
         scoreText.textContent = `Score: ${score}/${quizQuestions.length}`;
         quizContainer.classList.add("hidden");
         resultsContainer.classList.remove("hidden");
+
+        const scorePercentage = (score / quizQuestions.length) * 100;
+
+        if (scorePercentage >= 50) {
+          // Celebration effect
+          confetti({
+            particleCount: 200,
+            spread: 100,
+            origin: { y: 0.6 },
+          });
+        } else {
+          // Failure effect
+          resultsContainer.classList.add("shake");
+        }
       }
 
       // Event Listeners
@@ -422,18 +656,41 @@
 
       restartBtn.addEventListener("click", () => {
         // Clear saved answers
-        localStorage.removeItem("phpQuizAnswers");
+        localStorage.removeItem("cplusplusQuizAnswers");
         userAnswers = Array(quizQuestions.length).fill(null);
         currentQuestionIndex = 0;
 
         // Reset UI
         resultsContainer.classList.add("hidden");
         quizContainer.classList.remove("hidden");
+        resultsContainer.classList.remove("shake"); // Remove shake effect on restart
 
         // Reinitialize quiz
         initQuiz();
       });
 
+      downloadPdfBtn.addEventListener("click", () => {
+        const { jsPDF } = window.jspdf;
+        const resultsToCapture = document.getElementById("results-container");
+
+        // Temporarily show the container to capture it, if it's hidden
+        const wasHidden = resultsToCapture.classList.contains("hidden");
+        if (wasHidden) {
+          resultsToCapture.classList.remove("hidden");
+        }
+
+        html2canvas(resultsToCapture).then((canvas) => {
+          if (wasHidden) {
+            resultsToCapture.classList.add("hidden");
+          }
+          const imgData = canvas.toDataURL("image/png");
+          const pdf = new jsPDF("p", "mm", "a4");
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+          pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+          pdf.save("quiz-cplusplus-results.pdf");
+        });
+      });
       // Initialize the quiz
       initQuiz();
     </script>
