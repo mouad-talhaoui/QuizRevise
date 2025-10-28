@@ -4,20 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Quiz - Page d'Accueil</title>
+    <title>Quiz - Mathématiques</title>
     <link
       rel="icon"
-      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❓</text></svg>"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧮</text></svg>"
     />
     <!-- Link to Tailwind CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
-    <!-- Custom Styles (optional) -->
+    <!-- KaTeX for LaTeX Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css" integrity="sha384-Xi8rHCmBmhbuyyhbI88391ZKP2s0ADtFP4GradUguCNl/tRGIeHzBIrD7pPAoLq1" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js" integrity="sha384-X/XCfMm41eSirvxyIhHgoEWNDPGZRqKBrm1ENZKVZN+bVpEXmcRVDPBUAexSSaEV" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+
+    <!-- Custom Styles -->
     <style>
       .parallax-bg {
-        background-image: url("https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1170");
+        background-image: url("https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=1170");
         min-height: 400px;
         background-attachment: fixed;
         background-position: center;
@@ -31,10 +37,42 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: rgba(29, 78, 216, 0.7); /* A semi-transparent blue overlay */
+        background-color: rgba(59, 130, 246, 0.7); /* A semi-transparent blue overlay */
+      }
+      .katex {
+        font-size: 1.2em; /* Adjust font size for LaTeX */
+      }
+      .answer-btn.correct {
+          background-color: #22c55e; /* green-500 */
+          color: white;
+      }
+      .answer-btn.incorrect {
+          background-color: #ef4444; /* red-500 */
+          color: white;
+      }
+      #celebration-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9999;
+        overflow: hidden;
+      }
+      .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: #fde047;
+        opacity: 0.7;
+        animation: confetti-fall 5s linear infinite;
+      }
+      @keyframes confetti-fall {
+        0% { transform: translateY(-10vh) rotate(0deg); }
+        100% { transform: translateY(110vh) rotate(720deg); }
       }
     </style>
-    <script src="script.js"></script>
   </head>
 
   <body class="bg-gray-100 font-sans text-gray-900">
@@ -45,9 +83,9 @@
         class="container mx-auto h-full flex flex-col justify-center items-center text-center relative z-10 p-4"
       >
         <div>
-          <h1 class="text-5xl font-bold">Bienvenue sur QuizRevise</h1>
+          <h1 class="text-5xl font-bold">Quiz de Mathématiques</h1>
           <p class="mt-4 text-xl">
-            Testez vos connaissances avec des quiz sur différents sujets !
+            Testez vos connaissances en algèbre linéaire et analyse.
           </p>
         </div>
       </div>
@@ -55,71 +93,41 @@
 
     <!-- Main Content -->
     <main class="container mx-auto p-6 mt-6">
-      <h2 class="text-2xl font-semibold text-center mb-8">
-        Choisissez votre catégorie de quiz :
-      </h2>
+        <div id="math-quiz-container" class="w-full max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+            <div id="quiz-start-screen">
+                <h2 class="text-2xl font-semibold text-center mb-4">Prêt à commencer le quiz ?</h2>
+                <p class="text-center mb-6">Vous aurez 3 questions sur les séries numériques, les séries de Fourier et l'algèbre linéaire.</p>
+                <button id="start-quiz-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300">Commencer le Quiz</button>
+            </div>
 
-      <!-- Quiz Categories -->
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-      >
-        <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
-        >
-          <a href="inpt2015.html" class="block text-center text-xl font-semibold"
-            >INPT 2015</a
-          >
-          <p class="mt-4 text-center">
-            Testez vos connaissances en programmation.
-          </p>
+            <div id="quiz-question-screen" class="hidden">
+                <div id="question-container" class="mb-6">
+                    <p id="question-text" class="text-xl font-medium"></p>
+                </div>
+                <div id="answer-buttons" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Answer buttons will be inserted here -->
+                </div>
+                <div class="mt-8 text-right">
+                    <button id="next-btn" class="bg-gray-700 text-white font-bold py-2 px-8 rounded-lg hover:bg-gray-800 transition-colors duration-300 hidden">Suivant</button>
+                </div>
+            </div>
+
+            <div id="quiz-results-screen" class="hidden text-center">
+                <h2 id="results-title" class="text-3xl font-bold mb-4"></h2>
+                <p id="results-score" class="text-xl mb-6"></p>
+                <button id="restart-quiz-btn" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300">Recommencer</button>
+            </div>
         </div>
-        <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
-        >
-          <a href="java.html" class="block text-center text-xl font-semibold"
-            >JAVA</a
-          >
-          <p class="mt-4 text-center">
-            Testez vos connaissances en programmation.
-          </p>
-        </div>
-
-        <div
-          class="bg-white p-6 rounded-lg shadow-md hover:bg-purple-500 hover:text-white transition duration-300 ease-in-out transform hover:-rotate-3"
-        >
-          <a href="android.html" class="block text-center text-xl font-semibold"
-            >Android</a
-          >
-          <p class="mt-4 text-center">
-            Testez vos connaissances en programmation.
-          </p>
-        </div>
-
-        
-        
-        
-
-        
-      </div>
     </main>
+
+    <!-- Celebration Container -->
+    <div id="celebration-container"></div>
 
     <!-- Footer -->
     <footer class="bg-gray-800 text-white p-6 mt-10 text-center">
-
       <p>&copy; 2025 QuizRevise. Tous droits réservés.</p>
-      <p class="text-sm">
-        QuizRevise est une plateforme d'apprentissage interactive pour les
-        étudiants et les professionnels.
-      </p>
     </footer>
-    <script>
-      // JavaScript function to redirect to the appropriate quiz page
-      function redirectToQuiz(category) {
-        let url = `${category}.html`; // Redirects to the corresponding page based on the category
-        window.location.href = url;
-      }
-    </script>
-    <!-- Optional: Add JavaScript (e.g., for handling navigation or interactive features) -->
 
+    <script src="script.js"></script>
   </body>
 </html>
